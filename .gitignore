@@ -1,0 +1,63 @@
+# Unity project Git ignore template (selected safe defaults).
+# Reference: https://github.com/github/gitignore/blob/main/Unity.gitignore
+# Place at the Unity project root. If an existing .gitignore exists, MERGE;
+# do not replace rules, remove tracked files, or override Git LFS policies.
+# Paths beginning with / are relative to this .gitignore's directory.
+
+# Unity-generated cache, temporary content, builds and per-user settings
+.utmp/
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emory[Cc]aptures/
+/[Rr]ecordings/
+
+# Editor and Android tooling local caches
+.vs/
+.gradle/
+.idea/
+.consulo/
+ExportedObj/
+*.DotSettings.user
+*.suo
+*.user
+*.userprefs
+
+# Unity-generated IDE project/solution files (enabled by default).
+# Adjust these rules if the project intentionally tracks custom solutions.
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+
+# Unity-generated UI Toolkit schema and scene dependency caches
+/UIElementsSchema/
+/[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Unity-generated crash/debug information
+mono_crash.*
+sysinfo.txt
+/*_BurstDebugInformation_DoNotShip/
+/*_BackUpThisFolder_ButDontShipItWithYourGame/
+
+# Project-dependent options: enable ONLY after confirming generated content.
+# Addressables content state may be required for content-update workflows.
+# /[Aa]ssets/AddressableAssetsData/*/addressables_content_state.bin
+# /[Aa]ssets/AddressableAssetsData/*/addressables_content_state.bin.meta
+# /[Aa]ssets/Addressables_Temp/
+# /[Aa]ssets/StreamingAssets/aa/
+# /ServerData/
+# EDM4U-generated repository (if not intentionally tracked):
+# /[Aa]ssets/GeneratedLocalRepo/
+# Exported Android/Unity packages (some teams intentionally version them):
+# *.apk
+# *.aab
+# *.obb
+# *.unitypackage
+
+# Do NOT ignore Assets/, .meta, Packages/, ProjectSettings/, UXML, USS,
+# PanelSettings, fonts, or other files needed to reproduce the project.

@@ -1,0 +1,37 @@
+# Unity + Codex shared file-format defaults.
+# Place in the actual Unity project root. If the project already has an
+# .editorconfig, merge these rules rather than replacing existing settings.
+# For a monorepo or nested Unity project, keep the setting below commented
+# so parent .editorconfig rules can be inherited. Uncomment root = true only
+# when this project is intentionally an independent configuration root.
+# Do not overwrite an existing project .editorconfig: merge applicable rules.
+# root = true
+
+# Directly authored text: UTF-8 without BOM, LF by default.
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+
+# New and edited C# source files: UTF-8 with BOM, LF.
+[*.cs]
+charset = utf-8-bom
+indent_style = space
+indent_size = 4
+
+# Windows batch files must use CRLF.
+[*.{bat,cmd}]
+end_of_line = crlf
+
+# Common JSON authoring convention; preserve existing project-specific rules.
+[*.{json,jsonc}]
+indent_style = space
+indent_size = 2
+
+# Unity-serialized and tool-managed assets retain their own encoding and line endings.
+# 'unset' cancels the wildcard defaults above for these file categories.
+# Do not manually re-save or normalize Unity-managed assets just to apply this file.
+[*.{meta,unity,prefab,asset,mat,controller,anim,overrideController,mask,playable,physicMaterial,physicsMaterial2D,renderTexture,terrainlayer,lighting,giparams}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset

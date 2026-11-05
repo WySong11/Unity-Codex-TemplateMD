@@ -1,0 +1,39 @@
+# Unity + Codex template: explicit rules for authored source / documents.
+# If your project already has .gitattributes, merge these lines while
+# preserving existing Git LFS, binary, and Unity-managed file rules.
+# Git line-ending attributes do not set or remove the UTF-8 BOM.
+
+# Authored text files: LF in both the index and the working tree.
+*.cs       text eol=lf
+*.md       text eol=lf
+*.json     text eol=lf
+*.jsonc    text eol=lf
+*.uxml     text eol=lf
+*.uss      text eol=lf
+*.shader   text eol=lf
+*.compute  text eol=lf
+*.hlsl     text eol=lf
+*.cginc    text eol=lf
+*.asmdef   text eol=lf
+*.asmref   text eol=lf
+*.yml      text eol=lf
+*.yaml     text eol=lf
+*.toml     text eol=lf
+*.ini      text eol=lf
+*.config   text eol=lf
+*.ps1      text eol=lf
+*.sh       text eol=lf
+*.txt      text eol=lf
+*.xml      text eol=lf
+*.csv      text eol=lf
+.editorconfig  text eol=lf
+.gitattributes text eol=lf
+.gitignore     text eol=lf
+
+# Windows batch files: CRLF in the working tree.
+*.bat      text eol=crlf
+*.cmd      text eol=crlf
+
+# Unity .meta / .unity / .prefab / .asset and other Unity-managed serialized
+# files intentionally have no extra attributes in this template.
+# Never run repository-wide re-normalization as a side effect of installation.
