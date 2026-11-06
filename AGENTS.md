@@ -40,6 +40,9 @@
 - 설치가 필요하면 `unity --version`, `unity setup codex --dry-run`과 해당 하위 명령 `--help`로 변경 대상·설정 경로를 확인한다. **사용자 명시적 설치 요청 또는 승인 후에만** `unity setup codex`를 실행한다. 설치 후 새 Codex 세션에서 Plugin과 Skill 인식 여부를 별도로 검증한다.
 - `unity setup codex`는 Codex용 Plugin과 Skill을 구성하나 **Unity MCP 등록 및 현재 프로젝트의 `com.unity.pipeline` 설치·Editor 연결 검증을 대신하지 않는다.** Unity CLI beta.16의 `unity setup all`은 셸 명령 실행 가능한 코딩 에이전트에 MCP를 기본 등록하지 않는다. 필요한 MCP는 `MD/UNITY_TOOLING.md`의 별도 절차로 확인한다.
 - Unity CLI beta.16의 `unity skill sync codex`는 해당 클라이언트의 Unity Skill을 동기화하며, 수정된 사용자 복사본을 보존한다. `unity skill sync --help`와 `unity skill install --list` 등 조회 명령으로 범위를 확인한 다음, **사용자가 Skill 갱신을 요청·승인한 경우에만** 동기화한다. CLI·Pipeline 자동 최신화 정책을 Skill/Plugin의 무조건 자동 변경으로 확대하지 않는다.
+
+- Unity CLI `1.0.0-beta.17`부터 Plugin 설치·업그레이드 시 의존 Plugin이 먼저 설치될 수 있고, 베타 Plugin 다운로드에는 경고가 표시된다. `unity plugin --help`, 지원되는 `unity plugin --json` 조회와 설치 미리보기로 **의존 항목·라이선스·베타 여부·전역/프로젝트 적용 범위**를 확인한다. 승인 범위 밖의 의존 Plugin이나 라이선스 수락이 필요하면 실행하지 않고 별도 승인받는다.
+- Skill 갱신 상태를 조사할 때는 `unity skill refresh --help`를 확인하고 beta.17 이상에서 지원되는 `unity skill refresh --dry-run --format json`으로 영향 범위를 미리 본다. `would-update`, `would-skip`, `would-prune` 및 충돌·건너뜀은 성공적인 업데이트와 구별한다. `unity skill refresh`의 실제 적용과 `unity plugin upgrade`는 사용자 요청·승인 후에만 실행하며, CLI·Pipeline 자동 최신화에 포함시키지 않는다.
 - 구형 Plugin 내 Skill, 새 CLI의 별도 설치 Skill, 프로젝트 로컬 `.agents/skills/`에 같은 Skill이 중복되어 지침이 반복되지 않는지 점검한다. 단순히 버전이 바뀌었다는 이유로 임의 삭제·재설치를 하지 않는다. 개별 설치 방식은 사용자가 따로 선택한 경우에만 기존 중복 여부와 공식 CLI 도움말을 확인하여 적용한다.
 - 필요한 Unity Skill이 실제 설치되어 있다면 그 `SKILL.md`와 필요한 참조 자료를 읽고 현재 Unity·CLI·패키지 버전에 맞게 적용한다. 여러 Skill이 관련되면 필요한 것만 선택한다. Skill은 도구 사용 절차를 보조하며 프로젝트 규칙, 사용자의 요청 또는 시스템·도구 권한을 대체하지 않는다.
 - Plugin·Skill이 없더라도 가능한 범위에서 기존 프로젝트 구조와 공식 자료에 따라 작업한다. **Plugin 미설치 / Skill 미인식 / MCP 미연결 / Pipeline 미설치**를 서로 다른 상태로 보고하며, 사용하지 않은 Skill을 적용했다고 주장하지 않는다.

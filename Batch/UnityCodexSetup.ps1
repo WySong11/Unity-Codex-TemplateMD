@@ -27,6 +27,20 @@ function Write-Warn([string]$Message) {
     Write-Host "[WARN] $Message" -ForegroundColor Yellow
 }
 
+# Beta.17 exit categories are hints only; the invoked command and its message are authoritative.
+function Get-UnityExitHint([int]$Code) {
+    switch ($Code) {
+        1  { return 'General failure or configuration write failure; inspect the command output.' }
+        2  { return 'Invalid or missing CLI argument; check the actual subcommand --help.' }
+        4  { return 'Command-specific input/auth failure (e.g. VCS_TOKEN_REQUIRED); inspect output.' }
+        7  { return 'Network/service unavailable; check connectivity, DNS and proxy.' }
+        14 { return 'Operation timed out; check network/Editor state.' }
+        17 { return 'Unity Editor unavailable; check loading, compilation and Safe Mode.' }
+        18 { return 'Unity Editor awaiting dialog input; inspect safely before responding.' }
+        default { return 'Check the command-specific error message.' }
+    }
+}
+
 function Write-Fail([string]$Message) {
     $script:FailedSteps++
     Write-Host "[ERROR] $Message" -ForegroundColor Red
@@ -47,7 +61,10 @@ function Invoke-Tool([string]$Name, [string[]]$Arguments) {
         & $Name @Arguments | Out-Host
         $code = $LASTEXITCODE
         if ($null -eq $code) { $code = 1 }
-        if ($code -ne 0) { Write-Warn "$Name returned exit code $code." }
+        if ($code -ne 0) {
+            Write-Warn "$Name returned exit code $code."
+            if ($Name -eq 'unity') { Write-Warn (Get-UnityExitHint ([int]$code)) }
+        }
         return [int]$code
     } catch {
         Write-Warn "$Name failed: $($_.Exception.Message)"
@@ -220,7 +237,22 @@ function Test-Codex {
         Write-Warn 'codex CLI is not on PATH; VS Code Codex extension may still be available.'
         Write-Warn 'Codex CLI is not installed automatically by this script.'
     }
-    if ($script:UnityAvailable) { [void](Invoke-Tool 'unity' @('skill', 'install', '--list')) }
+    if ($script:UnityAvailable) {
+        [void](Invoke-Tool 'unity' @('skill', 'install', '--list'))
+        # Beta.17: inspect the Skill refresh plan without installing or changing a Skill.
+        $versionText = (& unity --version 2>$null | Out-String).Trim()
+        $supportsRefreshPreview = $versionText -match '^1\.0\.0-beta\.(\d+)'
+        if ($supportsRefreshPreview -and [int]$Matches[1] -ge 17) {
+            $helpCode = Invoke-Tool 'unity' @('skill', 'refresh', '--help')
+            if ($helpCode -eq 0) {
+                $previewCode = Invoke-Tool 'unity' @('skill', 'refresh', '--dry-run', '--format', 'json')
+                if ($previewCode -ne 0) { Write-Warn 'Skill refresh preview unavailable; no refresh was performed.' }
+                else { Write-Note 'Review per-Skill would-update/would-skip/would-prune statuses and conflicts manually.' }
+            }
+        } else {
+            Write-Note 'Skill refresh dry-run is skipped (requires verified beta.17+).'
+        }
+    }
 }
 
 function Test-EditorConnectivity {

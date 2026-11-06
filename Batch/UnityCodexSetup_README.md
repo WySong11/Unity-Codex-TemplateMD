@@ -46,6 +46,14 @@ Batch\UnityCodexSetup.bat -Action All -ProjectPath "D:\Dev\MyUnityProject"
 
 **Unity MCP:** Codex MCP 목록 확인 후 `unity mcp configure codex --dry-run`을 표시하고 별도 승인을 받은 경우에만 설정합니다. Codex 설정 파일과 권한에 영향을 줄 수 있습니다. 등록만으로 실제 Unity Editor의 MCP 연결이 검증된 것은 아니며, Codex를 재시작한 후 읽기 전용 Unity MCP 호출을 확인해야 합니다.
 
+### Unity CLI beta.17 호환성 (2026-11-06)
+
+- `Check`는 CLI 버전이 beta.17 이상이면 `unity skill refresh --dry-run --format json`을 **읽기 전용 미리보기**로 실행한다. 결과의 `would-update`, `would-skip`, `would-prune` 및 충돌 여부를 확인한다. 실제 `unity skill refresh`·Plugin 설치·갱신은 수행하지 않는다.
+- `unity plugin install`·`unity plugin upgrade`는 필요한 다른 Plugin의 자동 설치와 라이선스 수락, 베타 다운로드 경고가 발생할 수 있다. 현재 스크립트는 직접 Plugin 업그레이드를 수행하지 않고, `unity setup codex --dry-run`과 사용자 승인을 거친 기존 절차만 사용한다. 미리보기에서 확인하지 못한 의존성·범위 변경은 승인 범위로 추정하지 않는다.
+- Unity CLI 실패 시 `2`(인수 오류), `4`(일부 필수 인증 입력 누락), `7`(네트워크), `14`(시간 초과), `17`(Editor 사용 불가), `18`(Editor 입력 대기) 등의 **진단 힌트**를 표시한다. 실제 오류 메시지와 명령별 의미를 먼저 확인한다.
+- Pipeline `install/upgrade --format tsv`은 beta.17부터 헤더 + key/value 형식이므로, 별도의 사용자 스크립트가 TSV를 파싱한다면 점검한다. 이 설치 도구는 해당 TSV 출력에 의존하지 않는다.
+- 현재 채널 최신 CLI·Pipeline 점검/업데이트 정책 및 사용자 승인 방식은 변경하지 않았다. Windows에서 실제 beta.17 설치·Editor 연결을 검증한 결과는 아니다.
+
 ## 4. 안전 정책 및 제한
 
 - `Check`는 설치·업데이트·파일 쓰기·Git 작업을 수행하지 않습니다. 단, Unity Editor 상태 조회나 명령 출력에는 로그인·네트워크·Editor 실행 상태가 영향을 줄 수 있습니다.
@@ -71,6 +79,6 @@ unity skill install --list
 
 공식 참고:
 - [Unity CLI 설치 및 사용](https://docs.unity.com/en-us/unity-cli/use-unity-cli)
-- [Unity CLI beta.16 릴리스 노트](https://docs.unity.com/en-us/unity-cli/release-notes)
+- [Unity CLI beta.17 릴리스 노트](https://docs.unity.com/en-us/unity-cli/release-notes)
 - [Pipeline 패키지 설치](https://docs.unity.com/en-us/unity-cli/unity-pipeline/unity-pipeline-package)
 - [Unity 공식 Agent Skill / Codex 연동 안내](https://github.com/Unity-Technologies/unity-agent-plugin)
