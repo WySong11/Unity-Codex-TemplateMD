@@ -43,7 +43,11 @@ Editor 전용 코드는 다음 위치에 둔다.
 Assets/<ProjectName>/Scripts/Editor/
 ```
 
-프로젝트에서 Assembly Definition을 사용한다면 런타임 어셈블리와 Editor 어셈블리를 분리한다.
+프로젝트에서 Assembly Definition을 사용한다면 런타임 어셈블리와 Editor 어셈블리를 분리한다. Editor 폴더를 만드는 것만으로 독립 Editor 어셈블리가 생성되었다고 단정하지 않고 `Include Platforms = Editor`와 실제 참조를 확인한다.
+
+- 스크립트 생성·이동 시 적용되는 `.asmdef`·`.asmref`와 기존 참조를 먼저 확인한다.
+- asmdef 설계·생성·수정·모듈 분리는 [UNITY_ASSEMBLY_RULES.md](UNITY_ASSEMBLY_RULES.md)에 따라 `Assembly-CSharp` 역참조·순환 참조·패키지·테스트 의존성을 검토한다.
+- 소규모 프로젝트에 asmdef를 강제하지 않고, 기존 코드의 대규모 어셈블리 이동을 사용자 요청 없이 자동 수행하지 않는다.
 
 ---
 

@@ -20,15 +20,15 @@
   <aside class="sidebar" id="sidebar"><div class="brand"><div class="brand-mark">UNITY × CODEX</div><h1>TemplateMD<br/>사용 가이드</h1><p>파일 역할 · 설치 방법 · 작업별 규칙</p></div>
     <div class="nav-group">가이드</div>
     <a href="#overview">템플릿 한눈에 보기</a><a href="#structure">폴더 구조</a><a href="#setup">다른 프로젝트에 적용하기</a><a href="#workflow">작업 진행 순서</a><a href="#catalog">13개 파일 찾아보기</a>
-    <div class="nav-group">파일별 상세 설명</div><a href="#file-agents-md" class="toc-item"><span class="small-indicator cat-core"></span><span>AGENTS.md</span></a><a href="#file-md-read-md" class="toc-item"><span class="small-indicator cat-core"></span><span>MD/READ.md</span></a><a href="#file-md-unity-tooling-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/UNITY_TOOLING.md</span></a><a href="#file-md-file-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/FILE.md</span></a><a href="#file-md-unity-cs-coding-rules-md" class="toc-item"><span class="small-indicator cat-dev"></span><span>MD/UNITY_CS_CODING_RULES.md</span></a><a href="#file-md-unity-asset-rules-md" class="toc-item"><span class="small-indicator cat-dev"></span><span>MD/UNITY_ASSET_RULES.md</span></a><a href="#file-md-build-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/BUILD.md</span></a><a href="#file-md-history-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/HISTORY.md</span></a><a href="#file-md-git-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/GIT.md</span></a><a href="#file-editorconfig" class="toc-item"><span class="small-indicator cat-config"></span><span>.editorconfig</span></a><a href="#file-gitattributes" class="toc-item"><span class="small-indicator cat-config"></span><span>.gitattributes</span></a><a href="#file-gitignore" class="toc-item"><span class="small-indicator cat-config"></span><span>.gitignore</span></a><a href="#file-vscode-settings-json" class="toc-item"><span class="small-indicator cat-config"></span><span>.vscode/settings.json</span></a>
+    <div class="nav-group">파일별 상세 설명</div><a href="#file-agents-md" class="toc-item"><span class="small-indicator cat-core"></span><span>AGENTS.md</span></a><a href="#file-md-read-md" class="toc-item"><span class="small-indicator cat-core"></span><span>MD/READ.md</span></a><a href="#file-md-unity-tooling-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/UNITY_TOOLING.md</span></a><a href="#file-md-file-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/FILE.md</span></a><a href="#file-md-unity-cs-coding-rules-md" class="toc-item"><span class="small-indicator cat-dev"></span><span>MD/UNITY_CS_CODING_RULES.md</span></a><a href="#file-md-unity-assembly-rules-md" class="toc-item"><span class="small-indicator cat-dev"></span><span>MD/UNITY_ASSEMBLY_RULES.md</span></a><a href="#file-md-unity-asset-rules-md" class="toc-item"><span class="small-indicator cat-dev"></span><span>MD/UNITY_ASSET_RULES.md</span></a><a href="#file-md-build-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/BUILD.md</span></a><a href="#file-md-history-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/HISTORY.md</span></a><a href="#file-md-git-md" class="toc-item"><span class="small-indicator cat-ops"></span><span>MD/GIT.md</span></a><a href="#file-editorconfig" class="toc-item"><span class="small-indicator cat-config"></span><span>.editorconfig</span></a><a href="#file-gitattributes" class="toc-item"><span class="small-indicator cat-config"></span><span>.gitattributes</span></a><a href="#file-gitignore" class="toc-item"><span class="small-indicator cat-config"></span><span>.gitignore</span></a><a href="#file-vscode-settings-json" class="toc-item"><span class="small-indicator cat-config"></span><span>.vscode/settings.json</span></a>
     <div class="nav-group">참고 자료</div><a href="#scenarios">작업별 사용 예시</a><a href="#formats">파일 인코딩 기준</a><a href="#notes">주의사항과 FAQ</a><a href="#checklist">적용 확인 체크리스트</a>
   </aside>
   <main class="main">
-    <header class="hero"><div class="kicker">File-by-file implementation guide</div><h2>Unity 프로젝트에 적용하는<br/>Codex 규칙 템플릿 안내서</h2><p>현재 템플릿 ZIP의 13개 프로젝트용 파일이 각각 무엇을 담당하는지, 서로 어떻게 연결되는지, 새 Unity 프로젝트에 어떤 순서로 적용해야 하는지 설명합니다. Unity CLI 1.0.0-beta.17의 Plugin 의존성·Skill 상태·자동화 변경까지 반영했습니다.</p><div class="stats"><span>총 13개 파일</span><span>진입 문서 2개</span><span>개발·운영 규칙 7개</span><span>도구 설정 파일 4개</span><span>오프라인 HTML</span><span>CLI beta.17 기준</span></div></header>
+    <header class="hero"><div class="kicker">File-by-file implementation guide</div><h2>Unity 프로젝트에 적용하는<br/>Codex 규칙 템플릿 안내서</h2><p>현재 템플릿의 14개 핵심 프로젝트용 파일이 각각 무엇을 담당하는지, 서로 어떻게 연결되는지, 새 Unity 프로젝트에 어떤 순서로 적용해야 하는지 설명합니다. Unity CLI 1.0.0-beta.17의 Plugin 의존성·Skill 상태·자동화 변경까지 반영했습니다.</p><div class="stats"><span>핵심 14개 파일</span><span>진입 문서 2개</span><span>개발·운영 규칙 8개</span><span>도구 설정 파일 4개</span><span>오프라인 HTML</span><span>CLI beta.17 기준</span></div></header>
 
     <section class="section" id="overview"><div class="section-head"><div><div class="section-eyebrow">01 / 개요</div><h2>이 압축파일은 무엇인가?</h2></div></div>
      <p class="intro">Unity 6 계열 프로젝트에서 VS Code + Codex를 사용할 때, 코드·에셋·빌드·기록·Git 작업에 공통 규칙을 적용하도록 만든 <strong>프로젝트용 지침 묶음</strong>입니다. 파일들은 서로 연결되어 있지만, 모든 작업에서 13개를 전부 읽을 필요는 없습니다.</p>
-     <div class="overview-grid"><div class="overview-cell"><span class="icon" style="background:#e5f6f3;color:#047d72">①</span><h3>진입 문서</h3><p><b>AGENTS.md</b>가 원칙을 선언하고 <b>READ.md</b>가 필요한 상세 문서를 찾아줍니다.</p><small>2개 · 시작점과 라우팅</small></div><div class="overview-cell"><span class="icon" style="background:#f2edfc;color:#7450b6">②</span><h3>개발·운영 규칙</h3><p>C#·에셋·파일 형식·Unity 도구·빌드·History·Git의 세부 기준을 담당합니다.</p><small>7개 · 실제 작업 절차</small></div><div class="overview-cell"><span class="icon" style="background:#eaf0ff;color:#315ddb">③</span><h3>설정 파일</h3><p>편집기, Git, VS Code가 실제로 어떤 파일 형식과 추적 정책을 사용할지 보조합니다.</p><small>4개 · 도구 환경 설정</small></div></div>
+     <div class="overview-grid"><div class="overview-cell"><span class="icon" style="background:#e5f6f3;color:#047d72">①</span><h3>진입 문서</h3><p><b>AGENTS.md</b>가 원칙을 선언하고 <b>READ.md</b>가 필요한 상세 문서를 찾아줍니다.</p><small>2개 · 시작점과 라우팅</small></div><div class="overview-cell"><span class="icon" style="background:#f2edfc;color:#7450b6">②</span><h3>개발·운영 규칙</h3><p>C#·Assembly Definition·에셋·파일 형식·Unity 도구·빌드·History·Git의 세부 기준을 담당합니다.</p><small>8개 · 실제 작업 절차</small></div><div class="overview-cell"><span class="icon" style="background:#eaf0ff;color:#315ddb">③</span><h3>설정 파일</h3><p>편집기, Git, VS Code가 실제로 어떤 파일 형식과 추적 정책을 사용할지 보조합니다.</p><small>4개 · 도구 환경 설정</small></div></div>
      <div class="notice"><span class="symbol">i</span><p><b>구분해야 할 점</b> Markdown 규칙 파일을 복사하는 행위 자체가 Unity CLI 업데이트·MCP 연결·빌드·Commit을 즉시 실행하는 것은 아닙니다. 실제 프로젝트 작업을 수행하는 Codex가 해당 규칙을 적용할 때 조건에 맞는 절차가 실행됩니다.</p></div>
      <div class="notice"><span class="symbol">i</span><p><b>Unity CLI beta.17 변경</b> Plugin 설치·업그레이드 시 의존 Plugin 설치와 베타 경고를 확인해야 합니다. <code>unity skill refresh --dry-run --format json</code>은 갱신 전 상태를 살펴보는 미리보기이며 실제 Skill 갱신은 별도 승인 대상입니다. Pipeline TSV 출력 및 일부 CLI 종료 코드가 변경되었지만 기존 CLI·Pipeline 자동 최신화 정책은 유지됩니다. 자세한 절차는 <a href="MD/UNITY_TOOLING.md">UNITY_TOOLING.md</a>를 참고하세요.</p></div>
     </section>
@@ -45,6 +45,7 @@
 │   ├── <span class="highlight">READ.md</span>                 ← 작업별 문서 안내
 │   ├── FILE.md                 ← 인코딩·줄바꿈
 │   ├── UNITY_CS_CODING_RULES.md ← C# 규칙
+│   ├── UNITY_ASSEMBLY_RULES.md  ← asmdef·asmref 설계
 │   ├── UNITY_ASSET_RULES.md    ← 씬·프리팹·에셋
 │   ├── UNITY_TOOLING.md        ← CLI·MCP·Pipeline
 │   ├── BUILD.md                ← 빌드·검증
@@ -53,7 +54,7 @@
 ├── <span class="folder">Assets/</span>                      ← 기존 Unity 프로젝트
 ├── <span class="folder">Packages/</span>
 └── <span class="folder">ProjectSettings/</span></div>
-     <p class="subtle">파일 수: 루트의 AGENTS.md 1개 + MD/ 문서 8개 + 설정 파일 4개 = 총 13개. <code>History/</code>는 실제 기록 대상 작업에서 규칙에 따라 생성하는 폴더이며 ZIP에 미리 들어 있지 않습니다.</p>
+     <p class="subtle">파일 수: 루트의 AGENTS.md 1개 + MD/ 문서 9개 + 설정 파일 4개 = 총 14개. <code>History/</code>는 실제 기록 대상 작업에서 규칙에 따라 생성하는 폴더이며 ZIP에 미리 들어 있지 않습니다.</p>
     </section>
 
     <section class="section" id="setup"><div class="section-head"><div><div class="section-eyebrow">03 / 설치</div><h2>새 Unity 프로젝트에 적용하는 방법</h2></div></div>
@@ -95,7 +96,7 @@ unity setup codex --dry-run
     </section>
 
     <section class="section" id="catalog"><div class="section-head"><div><div class="section-eyebrow">05 / 빠른 탐색</div><h2>13개 파일 찾아보기</h2></div></div><p class="intro">파일명·역할·키워드로 검색하거나 종류별로 필터링할 수 있습니다. 카드를 누르면 아래 해당 파일의 상세 안내로 이동합니다.</p>
-      <div class="filterbar"><div class="filters"><button class="filterbtn active" type="button" data-filter="all">전체 13</button><button class="filterbtn" type="button" data-filter="core">진입 문서 2</button><button class="filterbtn" type="button" data-filter="dev">개발 규칙 2</button><button class="filterbtn" type="button" data-filter="ops">운영 규칙 5</button><button class="filterbtn" type="button" data-filter="config">설정 파일 4</button></div><input type="search" class="search" id="search" placeholder="예: Git, BOM, UXML, Pipeline" aria-label="파일 검색" /></div>
+      <div class="filterbar"><div class="filters"><button class="filterbtn active" type="button" data-filter="all">전체 14</button><button class="filterbtn" type="button" data-filter="core">진입 문서 2</button><button class="filterbtn" type="button" data-filter="dev">개발 규칙 3</button><button class="filterbtn" type="button" data-filter="ops">운영 규칙 5</button><button class="filterbtn" type="button" data-filter="config">설정 파일 4</button></div><input type="search" class="search" id="search" placeholder="예: Git, BOM, UXML, Pipeline" aria-label="파일 검색" /></div>
       <div class="file-grid" id="fileGrid"><article class="file-card" data-category="core" data-search="agents.md 프로젝트 규칙 총괄 codex가 프로젝트에서 무엇을 확인하고 어떻게 작업할지 정하는 최상위 진입점 적용 범위·작업 승인·문서 연결·ui toolkit 기본 방향·기록 및 git 처리 조건을 한곳에서 안내합니다." tabindex="0">
    <div class="file-card-head"><span class="category-dot cat-core"></span><span class="cat-label">진입 문서</span><span class="file-size">18.4 KB</span></div>
    <h3>AGENTS.md</h3><p class="card-desc">Codex가 프로젝트에서 무엇을 확인하고 어떻게 작업할지 정하는 최상위 진입점</p>
@@ -120,6 +121,11 @@ unity setup codex --dry-run
    <div class="file-card-head"><span class="category-dot cat-dev"></span><span class="cat-label">개발 규칙</span><span class="file-size">26.8 KB</span></div>
    <h3>MD/UNITY_CS_CODING_RULES.md</h3><p class="card-desc">클래스·명명·직렬화·생명주기·이벤트·성능·UI Toolkit 코드 관리</p>
    <a class="card-link" href="#file-md-unity-cs-coding-rules-md">자세히 보기 <span aria-hidden="true">↗</span></a>
+</article>
+<article class="file-card" data-category="dev" data-search="md/unity_assembly_rules.md asmdef asmref assembly definition 모듈 의존성 테스트 에디터 참조 guid">
+<div class="file-card-head"><span class="category-dot cat-dev"></span><span class="cat-label">개발 규칙</span><span class="file-size">신규</span></div>
+<h3>MD/UNITY_ASSEMBLY_RULES.md</h3><p class="card-desc">asmdef·asmref 적용 판단, 모듈 의존성·GUID·Editor·Tests 검증</p>
+<a class="card-link" href="#file-md-unity-assembly-rules-md">자세히 보기 <span aria-hidden="true">↗</span></a>
 </article>
 <article class="file-card" data-category="dev" data-search="md/unity_asset_rules.md scene · prefab · 에셋 보호 .meta·guid·에셋 참조와 uxml·uss·panelsettings를 안전하게 유지 unity asset database의 참조를 보존하고 에셋 변경으로 인한 missing script, guid 손상, ui 참조 깨짐을 예방합니다." tabindex="0">
    <div class="file-card-head"><span class="category-dot cat-dev"></span><span class="cat-label">개발 규칙</span><span class="file-size">13.1 KB</span></div>
@@ -164,7 +170,7 @@ unity setup codex --dry-run
     </section>
 
     <section class="section" id="file-details"><div class="section-head"><div><div class="section-eyebrow">06 / 파일별 설명</div><h2>각 파일의 역할과 사용 방법</h2></div></div><p class="intro">모든 파일은 실제 ZIP의 내용을 기준으로 정리했습니다. 상세 설명은 원문을 대체하지 않으므로 구현 시에는 반드시 해당 MD의 실제 규칙을 함께 확인하세요.</p><article class="detail-card" id="file-agents-md">
-   <div class="detail-head"><div><div class="eyebrow">01 / 13 &nbsp;·&nbsp; 진입 문서</div><h3><code>AGENTS.md</code></h3><p class="detail-subtitle">프로젝트 규칙 총괄</p></div><a class="locate" href="AGENTS.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">01 / 14 &nbsp;·&nbsp; 진입 문서</div><h3><code>AGENTS.md</code></h3><p class="detail-subtitle">프로젝트 규칙 총괄</p></div><a class="locate" href="AGENTS.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">적용 범위·작업 승인·문서 연결·UI Toolkit 기본 방향·기록 및 Git 처리 조건을 한곳에서 안내합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>프로젝트를 처음 열 때, 실제 프로젝트 작업을 시작하기 전에</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>신규 UI의 기본 방향은 UI Toolkit이며 기존 uGUI/TMP 화면은 임의로 전환하지 않음</li><li>실제 수정 파일에는 FILE.md 목표 인코딩·줄바꿈 적용</li><li>AGENTS.md가 도구 권한이나 승인 정책을 무시하게 만들지는 않음</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>Unity 프로젝트 루트(Assets / Packages / ProjectSettings가 있는 위치)에 둡니다.</li><li>작업 시작 전에 AGENTS.md를 확인한 후 MD/READ.md에서 해당 작업의 세부 규칙을 찾습니다.</li><li>VS Code + Codex에서 공식 unity-agent-plugin과 별도 Unity Skill 설치·인식 상태를 각각 확인합니다. 설치가 필요하면 사용자 승인 후 <code>unity setup codex</code>를 실행하고 중복 Skill을 검사합니다.</li><li>요청한 기능 작업이 끝나면 검증 → History 기록 → Git 후처리 규칙을 적용합니다.</li></ol></div>
@@ -172,7 +178,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-read-md">READ.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-unity-tooling-md">UNITY_TOOLING.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-git-md">GIT.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-md-read-md">
-   <div class="detail-head"><div><div class="eyebrow">02 / 13 &nbsp;·&nbsp; 진입 문서</div><h3><code>MD/READ.md</code></h3><p class="detail-subtitle">작업별 문서 찾아보기</p></div><a class="locate" href="MD/READ.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">02 / 14 &nbsp;·&nbsp; 진입 문서</div><h3><code>MD/READ.md</code></h3><p class="detail-subtitle">작업별 문서 찾아보기</p></div><a class="locate" href="MD/READ.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">문서 읽기 순서, 실제 프로젝트 경로와 확인 대상, 작업 유형별 문서 선택을 안내합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>새 프로젝트 참여 시, 작업 목적이 바뀔 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>읽는 순서는 우선순위를 뜻하지 않음</li><li>VALIDATION.md와 Batch/Validate.ps1은 선택적이며 현재 ZIP에 없음</li><li>문서 설명 요청만으로 업데이트·빌드·Push를 실행하지 않음</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>AGENTS.md를 읽은 다음 READ.md의 작업별 읽는 순서 표를 확인합니다.</li><li>C# 구현이면 C# 규칙·FILE.md를, UI Toolkit이면 C#·에셋·FILE.md를 함께 확인합니다.</li><li>실제 파일을 바꾸는 작업이면 HISTORY.md와 GIT.md 적용 조건도 검토합니다.</li></ol></div>
@@ -180,7 +186,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-agents-md">AGENTS.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-file-md">FILE.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-md-unity-tooling-md">
-   <div class="detail-head"><div><div class="eyebrow">03 / 13 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/UNITY_TOOLING.md</code></h3><p class="detail-subtitle">Unity CLI · MCP · Pipeline</p></div><a class="locate" href="MD/UNITY_TOOLING.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">03 / 14 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/UNITY_TOOLING.md</code></h3><p class="detail-subtitle">Unity CLI · MCP · Pipeline</p></div><a class="locate" href="MD/UNITY_TOOLING.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">Unity CLI의 현재 채널 최신 확인, Codex MCP 등록 점검, 프로젝트별 com.unity.pipeline 설치·업데이트, Editor 연결 확인을 정의합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>세션의 첫 실제 Unity 구현·수정·실행·검증 작업 직전 / 연결 오류 / 사용자 직접 점검 요청</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>최초 실제 Unity 작업 전 전체 점검은 세션당 한 번</li><li>후속 작업마다 전체 최신 조회를 반복하지 않음</li><li>CLI와 Pipeline 자동 최신화 유지: 사용자·팀의 명시적 고정, 호환 불가, 확인 불가, 권한 제한은 예외</li><li>beta.16에서는 Plugin과 Unity Skill을 별도로 확인하고, 신규 설치 또는 Skill 동기화는 사용자 요청·승인 대상</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>VS Code 터미널이 실제 Unity 프로젝트 루트에 있는지 확인합니다.</li><li>Unity CLI의 버전 및 업데이트를 확인하고 조건이 맞으면 같은 채널 최신으로 갱신합니다. beta.16의 <code>unity skill sync --help</code>로 Skill 상태 관리 방법을 확인하되 사용자 승인 없이 동기화를 실행하지 않습니다.</li><li>Unity MCP 등록 상태를 검사하고 누락된 경우 dry-run 검토 후 관련 지침대로 보완합니다.</li><li>현재 프로젝트의 Pipeline 의존성·호환성을 확인하고 필요 시 install/upgrade를 수행합니다.</li><li>Editor 및 MCP에서 실제 대상 프로젝트가 조회되는지 검증합니다.</li></ol></div>
@@ -188,7 +194,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-agents-md">AGENTS.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-build-md">BUILD.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-md-file-md">
-   <div class="detail-head"><div><div class="eyebrow">04 / 13 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/FILE.md</code></h3><p class="detail-subtitle">인코딩 · 줄바꿈 통일</p></div><a class="locate" href="MD/FILE.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">04 / 14 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/FILE.md</code></h3><p class="detail-subtitle">인코딩 · 줄바꿈 통일</p></div><a class="locate" href="MD/FILE.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">새 파일과 실제 수정한 기존 파일에 일관된 저장 형식을 적용하고 한글 깨짐과 대량 변경을 방지합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>텍스트 파일을 신규 생성하거나 실제 내용을 수정할 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>.editorconfig는 에디터 동작, .gitattributes는 Git 저장소의 텍스트 정규화</li><li>기존 파일도 실제 내용을 수정했다면 해당 파일만 목표 형식으로 변환</li><li>Unity 직렬화 에셋 및 도구 생성물은 목표 형식 강제 적용에서 제외</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>작업 전 대상 파일의 종류와 .editorconfig/.gitattributes 등 실제 적용 설정을 확인합니다.</li><li>신규/수정 .cs는 UTF-8 with BOM + LF, 일반 텍스트는 UTF-8 without BOM + LF, .bat/.cmd는 기본 UTF-8 without BOM + CRLF로 저장합니다.</li><li>읽기만 한 파일과 Unity·외부 도구 관리 파일은 형식을 임의로 바꾸지 않습니다.</li><li>저장 전후 한글 문자열, BOM 바이트, 줄바꿈, Git Diff를 확인합니다.</li><li>프로젝트 전체 일괄 변환은 별도 요청과 별도 커밋으로 처리합니다.</li></ol></div>
@@ -196,15 +202,23 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-editorconfig">.editorconfig<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-gitattributes">.gitattributes<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-unity-cs-coding-rules-md">UNITY_CS_CODING_RULES.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-md-unity-cs-coding-rules-md">
-   <div class="detail-head"><div><div class="eyebrow">05 / 13 &nbsp;·&nbsp; 개발 규칙</div><h3><code>MD/UNITY_CS_CODING_RULES.md</code></h3><p class="detail-subtitle">Unity C# 코딩 기준</p></div><a class="locate" href="MD/UNITY_CS_CODING_RULES.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">05 / 14 &nbsp;·&nbsp; 개발 규칙</div><h3><code>MD/UNITY_CS_CODING_RULES.md</code></h3><p class="detail-subtitle">Unity C# 코딩 기준</p></div><a class="locate" href="MD/UNITY_CS_CODING_RULES.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">기존 프로젝트 구조를 우선하면서 일관된 C# 코드를 작성하고 Unity 객체 참조 및 생명주기 오류를 방지합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>C# 스크립트 생성·수정·리팩터링·코드 리뷰 시</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>SerializeField, 이벤트, 코루틴, Physics, Input System 등 Unity 코드 실무 규칙 포함</li><li>UI Toolkit: UIDocument.rootVisualElement, Q&lt;T&gt;(), UXML·USS·C# 역할 분리</li><li>기존 Canvas·TMP 인터페이스는 요청 없이 강제 전환하지 않음</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>같은 기능의 기존 스크립트와 namespace, asmdef, 관련 패키지 버전을 먼저 확인합니다.</li><li>파일명과 대표 클래스명을 맞추고 직렬화 필드·public API·Inspector 연결을 보호합니다.</li><li>OnEnable/OnDisable에서 UI Toolkit 및 일반 이벤트 구독·해제를 관리합니다.</li><li>신규/실제로 수정한 C#을 UTF-8 with BOM + LF로 저장하고 컴파일·한글을 검증합니다.</li></ol></div>
    <div class="caution"><strong>주의</strong><span>문서의 샘플 클래스는 예시입니다. 실제 프로젝트의 이름·네임스페이스·컴포넌트 구조에 맞춰 적용해야 합니다.</span></div>
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-file-md">FILE.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-unity-asset-rules-md">UNITY_ASSET_RULES.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
+<article class="detail-card" id="file-md-unity-assembly-rules-md">
+<div class="detail-head"><div><div class="eyebrow">06 / 14 &nbsp;·&nbsp; 개발 규칙</div><h3><code>MD/UNITY_ASSEMBLY_RULES.md</code></h3><p class="detail-subtitle">Assembly Definition 모듈 설계</p></div><a class="locate" href="MD/UNITY_ASSEMBLY_RULES.md">원본 파일 열기 ↗</a></div>
+<p class="summary-line">기존 Unity 프로젝트에 .asmdef·.asmref가 필요한지 판단하고, 모듈 경계·의존성·Editor·Tests 분리와 참조 보존을 검증합니다.</p>
+<div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>asmdef·asmref 생성·변경, 기존 코드를 별도 어셈블리로 이동할 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>모든 프로젝트·폴더에 자동 생성 금지</li><li>Assembly-CSharp 역참조와 순환 참조 금지</li><li>GUID·플랫폼·테스트 설정과 직렬화 참조 보존</li></ul></div></div>
+<div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>프로젝트의 기존 참조 그래프와 패키지·Unity 버전을 확인합니다.</li><li>필요한 모듈만 분리하고 Runtime·Editor·Tests 참조 방향을 설계합니다.</li><li>Unity Editor에서 asmdef/asmref를 설정하고 .meta·GUID를 보존합니다.</li><li>컴파일, 영향받는 테스트와 씬·프리팹·Player 빌드를 검증합니다.</li></ol></div>
+<div class="caution"><strong>주의</strong><span>asmdef 적용만으로 런타임 성능이나 컴파일 시간이 무조건 개선되지는 않습니다. 대규모 재편은 별도 사용자 요청이 필요합니다.</span></div>
+<div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-unity-cs-coding-rules-md">UNITY_CS_CODING_RULES.md</a> <a class="ref-chip" href="#file-md-unity-asset-rules-md">UNITY_ASSET_RULES.md</a> <a class="ref-chip" href="#file-md-build-md">BUILD.md</a></div>
+</article>
 <article class="detail-card" id="file-md-unity-asset-rules-md">
-   <div class="detail-head"><div><div class="eyebrow">06 / 13 &nbsp;·&nbsp; 개발 규칙</div><h3><code>MD/UNITY_ASSET_RULES.md</code></h3><p class="detail-subtitle">Scene · Prefab · 에셋 보호</p></div><a class="locate" href="MD/UNITY_ASSET_RULES.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">07 / 14 &nbsp;·&nbsp; 개발 규칙</div><h3><code>MD/UNITY_ASSET_RULES.md</code></h3><p class="detail-subtitle">Scene · Prefab · 에셋 보호</p></div><a class="locate" href="MD/UNITY_ASSET_RULES.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">Unity Asset Database의 참조를 보존하고 에셋 변경으로 인한 Missing Script, GUID 손상, UI 참조 깨짐을 예방합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>씬·프리팹·텍스처·머티리얼·UI 에셋 생성·이동·수정·삭제 시</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>새 에셋의 .meta는 Unity가 생성하도록 함</li><li>공유 PanelSettings 변경은 여러 화면에 파급 가능</li><li>UXML name·USS class 변경 시 C# Q&lt;T&gt;() 참조까지 확인</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>변경 대상이 원본 에셋인지 Prefab Variant인지 씬 인스턴스인지 먼저 확인합니다.</li><li>Unity Editor 또는 지원되는 Editor API로 에셋 이동·이름 변경을 우선 수행합니다.</li><li>파일 시스템에서 이동할 때는 대응 .meta를 함께 관리하고 GUID를 보존합니다.</li><li>UI Toolkit에서는 UIDocument, UXML, USS, PanelSettings 및 공유 폰트·fallback 참조를 확인합니다.</li><li>저장·재임포트·씬 재열기 및 필요한 실행 검증을 진행합니다.</li></ol></div>
@@ -212,7 +226,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-unity-cs-coding-rules-md">UNITY_CS_CODING_RULES.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-build-md">BUILD.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-md-build-md">
-   <div class="detail-head"><div><div class="eyebrow">07 / 13 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/BUILD.md</code></h3><p class="detail-subtitle">빌드 · 실행 검증</p></div><a class="locate" href="MD/BUILD.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">08 / 14 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/BUILD.md</code></h3><p class="detail-subtitle">빌드 · 실행 검증</p></div><a class="locate" href="MD/BUILD.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">빌드 성공, 실제 Player 실행 성공, 배포 성공을 별개 결과로 판단하고 필요한 검증 범위를 정합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>Windows·Android·WebGL 등 Player 빌드, 빌드 설정 변경, 오류 분석 시</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>빌드 성공 ≠ 실행 검증 성공 ≠ 배포 성공</li><li>빌드 요청만으로 스토어 업로드·배포 수행하지 않음</li><li>대상 장치에서 미검증이라면 완료로 표시하지 않음</li><li>beta.16의 열린 Editor 빌드는 지원 옵션에 한하며 타깃 전환 및 CLI 대기 중단과 실제 빌드 중단을 구별</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>현재 Unity 버전, Packages, 대상 플랫폼, SDK/NDK/JDK, 빌드 프로필을 확인합니다.</li><li>출력 경로와 기존 산출물 충돌 여부를 확인한 후 요청 범위 내에서 빌드합니다.</li><li>새 에러, Scene/Prefab 참조, 플레이 동작, 대상 플랫폼 차이를 검사합니다.</li><li>UI Toolkit 변경이면 UIDocument·UXML/USS·폰트·해상도·입력·이벤트·씬 전환을 추가 검증합니다.</li><li>정적/컴파일, Editor Play Mode, 실제 Player 검증을 구분해 보고합니다.</li></ol></div>
@@ -220,7 +234,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-unity-tooling-md">UNITY_TOOLING.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-history-md">HISTORY.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-md-history-md">
-   <div class="detail-head"><div><div class="eyebrow">08 / 13 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/HISTORY.md</code></h3><p class="detail-subtitle">작업별 HTML 이력</p></div><a class="locate" href="MD/HISTORY.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">09 / 14 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/HISTORY.md</code></h3><p class="detail-subtitle">작업별 HTML 이력</p></div><a class="locate" href="MD/HISTORY.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">무엇을 변경했고 무엇을 검증했는지 작업별 기록을 남겨 재현·검토·추적을 돕습니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>실제 프로젝트 파일 변경 또는 사용자가 명시적으로 기록 작성을 요청할 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>분석·설명·점검만 한 경우 원칙적으로 HTML 생성 없음</li><li>부분 완료·실패도 실제 상태대로 기록</li><li>기존 이력과 인덱스를 임의 삭제하거나 덮어쓰지 않음</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>실제 파일 변경 범위를 확인하고 작업 내용과 수행한 검증, 미검증 항목을 정리합니다.</li><li>History/ 아래 작업별 HTML을 작성하고 History/History.html 인덱스에 연결합니다.</li><li>기록에는 작성 시점의 Git 상태를 기재합니다.</li><li>그다음 GIT.md에 따라 자동 Commit/Push 가능 여부를 검토합니다.</li><li>Commit ID와 최종 Push 결과는 Git 로그·사용자 최종 보고에서 관리하며, 후처리 때문에 History HTML을 자동 재수정하지 않습니다.</li></ol></div>
@@ -228,7 +242,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-git-md">GIT.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-agents-md">AGENTS.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-md-git-md">
-   <div class="detail-head"><div><div class="eyebrow">09 / 13 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/GIT.md</code></h3><p class="detail-subtitle">안전한 자동 Commit · Push</p></div><a class="locate" href="MD/GIT.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">10 / 14 &nbsp;·&nbsp; 운영 규칙</div><h3><code>MD/GIT.md</code></h3><p class="detail-subtitle">안전한 자동 Commit · Push</p></div><a class="locate" href="MD/GIT.md" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">사용자가 명시적으로 금지하지 않았고 안전 조건을 충족한 변경에 한해 자동 Commit·Push를 수행하면서 다른 사람의 변경·원격 이력을 보호합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>Git 저장소에서 실제 프로젝트 파일 변경 작업이 완료되었을 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>원격이 없거나 Push 안전 조건 미충족이면 로컬 Commit은 유지할 수 있음</li><li>Force Push·무단 Merge/Rebase·임의 브랜치/원격 변경 금지</li><li>.gitignore 패턴이 기존에 추적된 파일을 자동으로 untrack하지는 않음</li><li>beta.16의 Scene·Prefab 오브젝트 비교 명령은 선택적 읽기 전용 보조 검사로만 활용</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>작업 전에 git status 및 diff로 기존 staged/unstaged 변경을 확인합니다.</li><li>Unity 생성 캐시가 제외되었는지 .gitignore를 확인하고 에셋과 .meta를 필요한 범위로 Stage합니다.</li><li>비밀정보와 요청 외 변경이 섞이지 않았는지 확인합니다.</li><li>History 기록 및 검증 후 안전 조건이 충족되면 자동 Commit합니다.</li><li>Push 전에 원격 브랜치, upstream, 분기, 미전송 전체 커밋 범위를 검사한 뒤 안전할 때만 Push합니다.</li></ol></div>
@@ -236,7 +250,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-history-md">HISTORY.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-gitignore">.gitignore<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-editorconfig">
-   <div class="detail-head"><div><div class="eyebrow">10 / 13 &nbsp;·&nbsp; 설정 파일</div><h3><code>.editorconfig</code></h3><p class="detail-subtitle">에디터 저장 형식</p></div><a class="locate" href=".editorconfig" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">11 / 14 &nbsp;·&nbsp; 설정 파일</div><h3><code>.editorconfig</code></h3><p class="detail-subtitle">에디터 저장 형식</p></div><a class="locate" href=".editorconfig" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">C#에 BOM+LF, 일반 텍스트에 BOM 없음+LF, Windows Batch에 CRLF를 권장하고 Unity 관리 파일은 대상 규칙에서 제외합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>VS Code·Visual Studio 등의 파일 저장 행동을 통일하고 싶을 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>EditorConfig를 지원하는 에디터가 실제 저장 동작에 반영</li><li>C# 들여쓰기 4칸, JSON 2칸 예시 포함</li><li>root=true를 켤지 여부는 프로젝트의 독립성에 따라 판단</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>Unity 프로젝트 루트에 배치합니다. 기존 파일이 있으면 설정을 병합합니다.</li><li>기본 [*]는 UTF-8/LF이고 [*.cs]는 utf-8-bom, [*.{bat,cmd}]는 CRLF로 지정합니다.</li><li>Unity 관리 직렬화 확장자는 charset/end_of_line 등을 unset하도록 작성되어 있습니다.</li><li>root = true는 주석 처리되어 있으므로 상위 저장소 설정을 상속할 수 있습니다.</li></ol></div>
@@ -244,7 +258,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-file-md">FILE.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-gitattributes">.gitattributes<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-gitattributes">
-   <div class="detail-head"><div><div class="eyebrow">11 / 13 &nbsp;·&nbsp; 설정 파일</div><h3><code>.gitattributes</code></h3><p class="detail-subtitle">Git 줄바꿈 제어</p></div><a class="locate" href=".gitattributes" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">12 / 14 &nbsp;·&nbsp; 설정 파일</div><h3><code>.gitattributes</code></h3><p class="detail-subtitle">Git 줄바꿈 제어</p></div><a class="locate" href=".gitattributes" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">주로 직접 작성한 파일에 text eol=lf, .bat/.cmd에는 text eol=crlf를 설정합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>Git checkout 또는 Commit 시 줄바꿈 차이가 생기는 것을 줄이고 싶을 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>Git 속성은 UTF-8 BOM 자체를 생성하거나 제거하지 않음</li><li>Unity .meta/.unity/.prefab/.asset 등에 템플릿에서 추가 규칙을 강제하지 않음</li><li>기존 Git LFS·바이너리 규칙을 유지</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>Unity 프로젝트 및 Git 저장소 구조를 확인한 뒤 저장소에 맞게 배치하거나 기존 파일과 병합합니다.</li><li>C#·Markdown·JSON·UXML·USS·Shader 등 소스에 LF 속성을 설정합니다.</li><li>Windows Batch는 CRLF 속성을 설정합니다.</li><li>git check-attr text eol -- &lt;파일&gt; 명령으로 속성 적용을 확인합니다.</li></ol></div>
@@ -252,7 +266,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-editorconfig">.editorconfig<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-file-md">FILE.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-gitignore">
-   <div class="detail-head"><div><div class="eyebrow">12 / 13 &nbsp;·&nbsp; 설정 파일</div><h3><code>.gitignore</code></h3><p class="detail-subtitle">버전 관리 제외 목록</p></div><a class="locate" href=".gitignore" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">13 / 14 &nbsp;·&nbsp; 설정 파일</div><h3><code>.gitignore</code></h3><p class="detail-subtitle">버전 관리 제외 목록</p></div><a class="locate" href=".gitignore" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">재현에 필요하지 않은 자동 생성 파일이 커밋되는 것을 방지하고 Assets·Packages·ProjectSettings 등 필수 파일은 유지합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>처음 Git 저장소를 구성하거나 Unity 생성 캐시 추적 여부를 점검할 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>*.csproj / *.sln 자동 생성 파일 제외(팀에서 관리하는 경우 예외 검토)</li><li>Assets와 .meta, UXML/USS 및 핵심 설정 파일을 무조건 제외하지 않음</li><li>이미 추적 중인 파일은 .gitignore만으로 추적 해제되지 않음</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>Git 저장소와 Unity 프로젝트 루트가 일치하는지 확인합니다.</li><li>이미 .gitignore가 있으면 교체하지 말고 기존 규칙과 병합합니다.</li><li>Library, Temp, Obj, Build, Logs, UserSettings, IDE·Gradle 캐시 등의 제외 여부를 확인합니다.</li><li>Addressables, StreamingAssets, 배포 패키지 등 프로젝트 의존 항목은 기본 주석을 유지하고 필요한 경우만 활성화합니다.</li><li>git check-ignore -v --no-index -- &lt;경로&gt;로 제외 이유를 확인합니다.</li></ol></div>
@@ -260,7 +274,7 @@ unity setup codex --dry-run
    <div class="related"><strong>함께 보는 파일</strong><a class="ref-chip" href="#file-md-git-md">GIT.md<span aria-hidden="true"> ↗</span></a> <a class="ref-chip" href="#file-md-file-md">FILE.md<span aria-hidden="true"> ↗</span></a></div>
 </article>
 <article class="detail-card" id="file-vscode-settings-json">
-   <div class="detail-head"><div><div class="eyebrow">13 / 13 &nbsp;·&nbsp; 설정 파일</div><h3><code>.vscode/settings.json</code></h3><p class="detail-subtitle">VS Code 작업공간 기본값</p></div><a class="locate" href=".vscode/settings.json" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
+   <div class="detail-head"><div><div class="eyebrow">14 / 14 &nbsp;·&nbsp; 설정 파일</div><h3><code>.vscode/settings.json</code></h3><p class="detail-subtitle">VS Code 작업공간 기본값</p></div><a class="locate" href=".vscode/settings.json" title="원본 템플릿과 같은 폴더에 안내서를 두면 원본 파일을 열 수 있습니다">원본 파일 열기 ↗</a></div>
    <p class="summary-line">&quot;files.eol&quot;: &quot;\n&quot;으로 VS Code의 기본 줄바꿈을 LF로 설정합니다.</p>
    <div class="detail-grid"><div><div class="mini-label">언제 사용하는가</div><p>VS Code로 프로젝트를 열고 일반 텍스트 파일을 새로 만들 때</p></div><div><div class="mini-label">주요 운영 원칙</div><ul class="clean-list"><li>내용은 files.eol 하나뿐인 최소 설정</li><li>모든 파일의 인코딩·BOM을 자동 설정하지 않음</li><li>다른 VS Code 작업공간 설정을 덮어쓰지 않음</li></ul></div></div>
    <div class="how"><h4>실제 사용 방법</h4><ol class="clean-list"><li>Unity 프로젝트 루트의 .vscode/settings.json에 배치하거나 기존 JSON 설정에 한 항목만 병합합니다.</li><li>새 파일의 기본 줄바꿈이 LF인지 확인합니다.</li><li>C# BOM과 Batch CRLF처럼 확장자별 저장 규칙은 .editorconfig 및 FILE.md에 따라 별도 확인합니다.</li></ol></div>
@@ -274,7 +288,8 @@ unity setup codex --dry-run
      <div class="scenario"><h3>🎮 플레이어 이동 C# 수정</h3><p>입력 시스템과 기존 구현을 확인하고 C# 형식·컴파일을 점검합니다.</p><div class="route">AGENTS → READ → UNITY_CS_CODING_RULES + FILE → HISTORY → GIT</div></div>
      <div class="scenario"><h3>🖼️ UI Toolkit 화면 제작</h3><p>UIDocument, UXML/USS 구조·스타일·이벤트, 한글 폰트와 참조를 함께 관리합니다.</p><div class="route">AGENTS → READ → UNITY_CS_CODING_RULES + UNITY_ASSET_RULES + FILE → BUILD(검증) → HISTORY → GIT</div></div>
      <div class="scenario"><h3>🧱 Prefab·Scene 변경</h3><p>.meta·GUID 보존, 씬 저장, Inspector 참조 및 실행 동작을 확인합니다.</p><div class="route">AGENTS → READ → UNITY_ASSET_RULES → HISTORY → GIT</div></div>
-     <div class="scenario"><h3>📦 Android 빌드</h3><p>Unity/SDK·플랫폼·프로필을 확인하고 빌드와 기기 실행 검증을 구분합니다.</p><div class="route">AGENTS → READ → UNITY_TOOLING(조건 충족 시) → BUILD → HISTORY/GIT(변경 시)</div></div>
+     <div class="scenario"><h3>🧩 Assembly Definition 모듈화</h3><p>기존 의존성을 분석한 뒤 필요한 asmdef만 생성하고 컴파일·테스트를 검증합니다.</p><div class="route">AGENTS → READ → UNITY_ASSEMBLY_RULES + C#·ASSET → BUILD(검증) → HISTORY/GIT</div></div>
+<div class="scenario"><h3>📦 Android 빌드</h3><p>Unity/SDK·플랫폼·프로필을 확인하고 빌드와 기기 실행 검증을 구분합니다.</p><div class="route">AGENTS → READ → UNITY_TOOLING(조건 충족 시) → BUILD → HISTORY/GIT(변경 시)</div></div>
      <div class="scenario"><h3>🛠️ Unity CLI 연결 오류</h3><p>상태를 확인하고 관련 범위만 재점검합니다. 무조건 전체 재설치는 하지 않습니다.</p><div class="route">AGENTS → UNITY_TOOLING → 연결 검증 → 실제 변경 시 HISTORY/GIT</div></div>
      <div class="scenario"><h3>📖 규칙 문서 설명만 요청</h3><p>문서의 내용만 읽고 설명합니다. 도구 점검, 빌드, Git 실행은 하지 않습니다.</p><div class="route">AGENTS → READ → 해당 MD 검토 · 파일 변경 없음</div></div>
     </div></section>
@@ -303,7 +318,8 @@ git diff --check</code></pre></div>
        <details><summary>Unity CLI beta.16에서 Skill과 MCP는 자동 업데이트되나요?</summary><p>템플릿은 Unity CLI와 현재 프로젝트의 Pipeline 자동 최신화를 유지하지만, Codex Plugin/Skill의 무조건 자동 설치·갱신까지 허용하지 않습니다. <code>unity skill sync codex</code>는 사용자 요청·승인을 받은 후 적용하며, <code>unity setup all</code>은 셸 실행이 가능한 코딩 에이전트에 MCP를 기본 등록하지 않습니다.</p></details>
        <details><summary>Editor가 막혔을 때 beta.16에서 무엇을 확인하나요?</summary><p><code>unity pipeline editors</code>로 로딩·Safe Mode·팝업 상태를 확인하고, 지원되는 Editor라면 <code>unity command editor dialog</code>로 대기 팝업을 조회합니다. 종료 코드 <code>17</code>은 <code>UNAVAILABLE</code>, <code>18</code>은 <code>AWAITING_INPUT</code>입니다. 버튼 응답은 실제 동작을 확인한 후에만 수행합니다.</p></details>
        <details><summary>beta.16의 Unity CLI 출력 형식은 달라졌나요?</summary><p>지원하는 Editor의 <code>unity command --format json</code>은 종전 래퍼 대신 명령 결과만 반환할 수 있습니다. TSV에는 헤더가 없으며, <code>unity docs cache --format json</code> 목록은 <code>data.items</code>에 있습니다. 기존 PowerShell·CI 파서를 점검해야 합니다.</p></details>
-      <details><summary>기존 .editorconfig나 .gitignore를 덮어써도 되나요?</summary><p>권장하지 않습니다. 이미 존재한다면 기존 팀 정책·Git LFS·상위 .editorconfig 등을 검토하고 필요한 설정만 병합합니다. .editorconfig의 root = true는 배포본에서 주석 처리되어 있습니다.</p></details>
+      <details><summary>asmdef 파일은 모든 Unity 프로젝트에 자동 생성되나요?</summary><p>아닙니다. 기존 어셈블리·의존성·패키지·규모를 먼저 분석합니다. 프로젝트마다 필요한 모듈만 선택적으로 생성하며 기존 코드를 무단으로 일괄 분리하지 않습니다. <a href="MD/UNITY_ASSEMBLY_RULES.md">Assembly Definition 규칙</a>을 참고하세요.</p></details>
+<details><summary>기존 .editorconfig나 .gitignore를 덮어써도 되나요?</summary><p>권장하지 않습니다. 이미 존재한다면 기존 팀 정책·Git LFS·상위 .editorconfig 등을 검토하고 필요한 설정만 병합합니다. .editorconfig의 root = true는 배포본에서 주석 처리되어 있습니다.</p></details>
       <details><summary>문서나 코드만 수정해도 자동 Push를 하나요?</summary><p>프로젝트의 실제 변경 작업이라면 GIT.md의 조건에 따라 자동 Commit·Push가 수행될 수 있습니다. 다만 사용자 금지 지시, 저장소 상태, 원격 범위·보호 정책, 비밀정보 검사, 도구 권한 등 안전 조건이 우선합니다. 파일 변경 없는 분석·설명만으로 Git을 실행하지 않습니다.</p></details>
       <details><summary>기존 .cs 파일이 BOM 없는 CRLF인데 수정하면 어떻게 하나요?</summary><p>그 파일의 실제 내용을 수정했다면 목표 형식인 UTF-8 with BOM + LF로 정규화합니다. 한글 손상과 Git Diff를 확인합니다. 읽기만 한 파일, Unity 자동 생성 파일, 작업 외 파일은 변환하지 않습니다.</p></details>
       <details><summary>VALIDATION.md / Batch/Validate.ps1은 왜 없나요?</summary><p>READ.md와 AGENTS.md에서 선택적 Harness 검증 도구로 분류하며, 이 배포용 ZIP에는 포함하지 않았습니다. 검증 시스템이 실제 프로젝트에 설치되어 있고 관련 요청이 있을 때만 적용하도록 설계되어 있습니다.</p></details>
@@ -313,7 +329,7 @@ git diff --check</code></pre></div>
 
     <section class="section" id="checklist"><div class="section-head"><div><div class="section-eyebrow">10 / 적용 점검</div><h2>프로젝트에 복사한 뒤 확인할 항목</h2></div></div><p class="intro">다음 체크리스트는 화면에서 직접 체크할 수 있습니다. 저장 기능은 없으며 페이지를 새로 열면 초기화됩니다.</p><div class="checklist">
       <label class="checkline"><input type="checkbox" /><span>Unity 프로젝트 실제 루트에 AGENTS.md를 배치했다.</span></label>
-      <label class="checkline"><input type="checkbox" /><span>MD/ 폴더에 8개 상세 문서를 그대로 배치했다.</span></label>
+      <label class="checkline"><input type="checkbox" /><span>MD/ 폴더에 9개 상세 문서를 그대로 배치했다.</span></label>
       <label class="checkline"><input type="checkbox" /><span>기존 .editorconfig/.gitattributes/.gitignore와 병합했다.</span></label>
       <label class="checkline"><input type="checkbox" /><span>.vscode/settings.json의 기존 설정을 보호했다.</span></label>
       <label class="checkline"><input type="checkbox" /><span>Git 원격과 자동 Commit/Push 정책을 검토했다.</span></label>
@@ -324,7 +340,7 @@ git diff --check</code></pre></div>
       <label class="checkline"><input type="checkbox" /><span>테스트·History·Git 최종 결과를 구분해 보고할 준비가 되었다.</span></label>
     </div></section>
 
-    <footer class="footer"><div><strong>Unity × Codex | TemplateMD 사용 가이드</strong><br/>기준 자료: TemplateMD_Final_Distribution.zip 실제 파일 13개</div><div>이 가이드는 설명 문서이며 원본 설정을 변경하거나 명령을 실행하지 않습니다.</div></footer>
+    <footer class="footer"><div><strong>Unity × Codex | TemplateMD 사용 가이드</strong><br/>기준 자료: GitHub 핵심 규칙·설정 14개 (Batch·HTML 제외)</div><div>이 가이드는 설명 문서이며 원본 설정을 변경하거나 명령을 실행하지 않습니다.</div></footer>
   </main>
 </div>
 <a href="#top" class="top-link" aria-label="맨 위로">↑ 맨 위로</a>

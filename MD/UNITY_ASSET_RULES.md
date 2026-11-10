@@ -62,6 +62,12 @@ Assets/<ProjectName>/
 - 기존 `.meta`가 누락되면 버전 관리나 백업에서 복구 가능한지 먼저 확인한다. 새로 생성된 GUID를 기존 참조 복구로 간주하지 않는다.
 - 추적 대상 에셋은 대응하는 `.meta`와 함께 관리하며 추가·이동·삭제 누락을 확인한다.
 
+### 3.1 Assembly Definition(.asmdef·.asmref) 참조 보존
+
+- asmdef·asmref 생성·수정·이름 변경·이동 시 `.meta`·GUID 및 해당 어셈블리를 참조하는 다른 asmdef를 점검한다.
+- GUID 기반 참조와 이름 기반 참조를 구별하고, 임의 GUID 생성이나 기존 어셈블리 이름 일괄 변경을 금지한다.
+- 자세한 구조·의존성 검증은 [UNITY_ASSEMBLY_RULES.md](UNITY_ASSEMBLY_RULES.md)를 따른다.
+
 ---
 
 ## 4. 씬 수정

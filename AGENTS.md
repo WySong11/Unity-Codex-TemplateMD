@@ -22,12 +22,13 @@
 | [FILE.md](MD/FILE.md) | 파일 생성·수정 | 인코딩, 줄바꿈, 수정 파일의 점진적 형식 통일과 검증 |
 | [GIT.md](MD/GIT.md) | Git 저장소에서 파일 변경 | 기존 변경 보존, stage, 자동 commit/push 조건 및 실패 처리 |
 | [UNITY_CS_CODING_RULES.md](MD/UNITY_CS_CODING_RULES.md) | Unity C# 생성·수정·리팩터링·리뷰 | C# 구조, 직렬화, 생명주기, 검증 |
+| [UNITY_ASSEMBLY_RULES.md](MD/UNITY_ASSEMBLY_RULES.md) | asmdef·asmref 생성·수정, 모듈 재구성 | 도입 기준, 의존성·GUID·Editor·Tests 검증 |
 | [UNITY_ASSET_RULES.md](MD/UNITY_ASSET_RULES.md) | Unity 에셋 생성·수정·이동·삭제 | .meta와 GUID, 씬·프리팹, 임포트 설정 및 참조 보존 |
 | [BUILD.md](MD/BUILD.md) | 빌드 수행·설정 변경·실패 분석 | 빌드 환경, 실행 절차, 산출물 및 검증·실패 처리 |
 | [UNITY_TOOLING.md](MD/UNITY_TOOLING.md) | 세션의 첫 실제 Unity 작업, 연결 오류 또는 명시적 도구 점검 요청 | Unity CLI 최신 확인·업데이트, Codex Unity MCP 등록·연결, Pipeline 설치·업데이트와 결과 보고 |
 | Unity 공식 Plugin 및 별도 설치된 Unity Skill의 `SKILL.md` | 해당 Unity 전문 기능 작업(설치·활성화된 경우) | Unity CLI 및 작업별 사용 절차와 검증 |
 
-작업 시작 시 MD/READ.md에서 문서별 역할과 읽는 순서를 확인한 뒤, 현재 요청에 해당하는 상세 문서를 읽고 필요한 규칙을 적용한다. MD/READ.md는 안내 문서이며 상세 규칙의 우선순위를 변경하지 않는다. 에셋 작업에는 MD/UNITY_ASSET_RULES.md를, 빌드 작업에는 MD/BUILD.md를 함께 적용한다. 문서 작성·검토·수정 또는 일반적인 설명 요청만으로 Unity 도구 점검·설치·업데이트, 빌드 실행이나 배포를 수행하지 않는다. 실제 Unity 프로젝트 구현·수정·실행·검증 작업의 도구 준비는 MD/UNITY_TOOLING.md를 적용한다. 프로젝트 루트는 Assets, Packages, ProjectSettings 등의 실제 구조로 확인하며 Git 저장소 루트와 다를 수 있음을 고려한다.
+작업 시작 시 MD/READ.md에서 문서별 역할과 읽는 순서를 확인한 뒤, 현재 요청에 해당하는 상세 문서를 읽고 필요한 규칙을 적용한다. MD/READ.md는 안내 문서이며 상세 규칙의 우선순위를 변경하지 않는다. 에셋 작업에는 MD/UNITY_ASSET_RULES.md를, 빌드 작업에는 MD/BUILD.md를 함께 적용한다. `.asmdef`·`.asmref` 변경이나 어셈블리 재편 시에는 MD/UNITY_ASSEMBLY_RULES.md도 적용하며, 모든 프로젝트에 asmdef를 강제하거나 기존 구조를 일괄 변환하지 않는다. 문서 작성·검토·수정 또는 일반적인 설명 요청만으로 Unity 도구 점검·설치·업데이트, 빌드 실행이나 배포를 수행하지 않는다. 실제 Unity 프로젝트 구현·수정·실행·검증 작업의 도구 준비는 MD/UNITY_TOOLING.md를 적용한다. 프로젝트 루트는 Assets, Packages, ProjectSettings 등의 실제 구조로 확인하며 Git 저장소 루트와 다를 수 있음을 고려한다.
 
 문서를 찾지 못했다면 존재한다고 가정하지 않는다. 기존 구조와 파일 형식을 보존하고 누락된 문서를 보고한다. MD/GIT.md가 없으면 명시적인 사용자 지시 없이 자동 commit/push하지 않는다.
 
@@ -54,7 +55,7 @@
 - ProjectSettings/ProjectVersion.txt의 Unity 버전
 - Packages/manifest.json 및 필요한 경우 packages-lock.json의 패키지 정보
 - 렌더 파이프라인, 입력 시스템, 대상 플랫폼
-- 관련 씬, 프리팹, ScriptableObject, Assembly Definition 및 기존 구현
+- 관련 씬, 프리팹, ScriptableObject, Assembly Definition·Reference 및 기존 의존성과 구현
 - 기존 네임스페이스, 명명 규칙, 파일 저장 설정
 - Git 저장소 여부와 기존 staged/unstaged 변경
 

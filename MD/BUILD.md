@@ -184,6 +184,12 @@ UI Toolkit 변경 작업에는 아래 항목 중 **실제로 영향을 받는 �
 - 대상 플랫폼에서만 발생 가능한 폰트·해상도·터치 등의 문제를 해결했다고 주장하려면 가능하면 해당 플랫폼의 **실제 Player**에서 검증한다. 장치나 빌드 환경이 없다면 Editor 검증과 Player 미검증을 구분한다.
 - Unity Editor·패키지 버전에 없는 API 또는 Inspector 옵션을 있다고 가정하지 않고 현재 설치 환경을 확인한다.
 
+### 9.2 Assembly Definition(.asmdef·.asmref) 변경 시 검증
+
+- 실제 어셈블리 구성을 수정한 경우 [UNITY_ASSEMBLY_RULES.md](UNITY_ASSEMBLY_RULES.md)에 따라 Unity 재컴파일 완료 및 Console 최초 오류를 확인한다. 누락 참조, `Assembly-CSharp` 참조 제한, 순환 참조, Editor 전용 API 유입을 점검한다.
+- 관련 EditMode·PlayMode 테스트 어셈블리 참조와 테스트 결과, 씬·프리팹·ScriptableObject 직렬화/Inspector 연결을 확인한다.
+- 요청과 영향 범위에 맞는 Player 빌드만 검증하고 실제 실행하지 못한 단계는 `미검증`으로 보고한다. 문서 수정만으로 전체 빌드를 실행하지 않는다.
+
 ---
 
 ## 10. 실패 처리

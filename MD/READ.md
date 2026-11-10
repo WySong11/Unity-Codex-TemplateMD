@@ -27,6 +27,7 @@
 | [AGENTS.md](../AGENTS.md) | 공통 원칙, 적용 범위와 작업 유형별 규칙 | 실제 프로젝트 작업 시작 전 |
 | [FILE.md](FILE.md) | 인코딩·줄바꿈 및 수정 파일의 점진적 형식 정규화 | 파일 생성·수정 시 |
 | [UNITY_CS_CODING_RULES.md](UNITY_CS_CODING_RULES.md) | C# 구조, 명명, 직렬화와 생명주기 | C# 생성·수정·리뷰 시 |
+| [UNITY_ASSEMBLY_RULES.md](UNITY_ASSEMBLY_RULES.md) | asmdef·asmref 도입·의존성·모듈·플랫폼 관리 | 어셈블리 설계·수정·분리 시 |
 | [UNITY_ASSET_RULES.md](UNITY_ASSET_RULES.md) | 에셋, `.meta`, 씬·프리팹과 참조 보존 | 에셋 생성·수정·이동·삭제 시 |
 | [BUILD.md](BUILD.md) | 빌드 환경, 실행, 산출물과 검증 | 빌드 수행·설정 변경·실패 분석 시 |
 | [HISTORY.md](HISTORY.md) | 작업별 HTML 기록과 인덱스 | 실제 프로젝트 파일 변경 또는 명시적인 이력 요청 시 |
@@ -50,7 +51,8 @@
 | 작업 | 추가로 확인할 문서 |
 |---|---|
 | 문서 작성·수정 | `FILE.md`; 실제 프로젝트 반영 시 `HISTORY.md`, `GIT.md` |
-| C# 구현·리팩터링 | `UNITY_CS_CODING_RULES.md`, `FILE.md`, 관련 Skill |
+| C# 구현·리팩터링 | `UNITY_CS_CODING_RULES.md`, `FILE.md`, 관련 Skill. asmdef·asmref가 바뀌면 `UNITY_ASSEMBLY_RULES.md`도 확인 |
+| Assembly Definition 생성·수정·모듈 분리 | `UNITY_ASSEMBLY_RULES.md`, `UNITY_CS_CODING_RULES.md`, `UNITY_ASSET_RULES.md`, `FILE.md`; 검증 시 `BUILD.md` |
 | 씬·프리팹·머티리얼·리소스 변경 | `UNITY_ASSET_RULES.md`, `FILE.md`, 관련 Skill |
 | UI Toolkit 화면·UI 코드 변경 | `UNITY_CS_CODING_RULES.md`, `UNITY_ASSET_RULES.md`, `FILE.md`, 관련 Skill |
 | 빌드·플랫폼 설정·빌드 오류 수정 | `BUILD.md`, 변경 대상별 규칙, 관련 Skill |
