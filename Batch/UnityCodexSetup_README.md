@@ -19,7 +19,7 @@
 | 메뉴 | 동작 | 프로젝트 파일 변경 여부 |
 |---|---|---|
 | `1 Check` | 설치 여부·버전·패키지 선언·Codex·MCP 읽기 전용 점검 | 없음 |
-| `2 Setup` | 최신 stable CLI 설치·업데이트 또는 beta에서 stable로 전환, 프로젝트별 Pipeline 설치·업그레이드 | **Pipeline 변경은 사용자 승인 시** 가능 |
+| `2 Setup` | 최신 stable CLI 설치·업데이트, 프로젝트별 Pipeline 설치·업그레이드 | **Pipeline 변경은 사용자 승인 시** 가능 |
 | `3 Codex` | `unity setup codex --dry-run` 확인 후 공식 Plugin·Skill 설정 | **사용자 승인 시** 가능 (사용자/에이전트 설정) |
 | `4 Mcp` | `unity mcp configure codex --dry-run` 확인 후 설정 | **사용자 승인 시** 가능 (Codex 설정) |
 | `5 All` | 최신 stable CLI 준비 후 2→3→4의 나머지 단계 실행 | **Pipeline·Codex·MCP 변경은 사용자 승인 시** 가능 |
@@ -40,7 +40,7 @@ Batch\UnityCodexSetup.bat -Action All -ProjectPath "D:\Dev\MyUnityProject"
 
 **Unity CLI 신규 설치:** `Setup`과 `All`은 Unity 공식 배포 목록에서 최신 **stable**을 확인합니다. 사용자가 승인하면 공식 Windows 설치 스크립트를 다운로드하고 SHA-256을 표시한 뒤, 실행 승인 후 조회한 정식 릴리스를 설치합니다. CLI 설치 중에는 공식 설치 스크립트의 자동 Skill 설정을 건너뜁니다. 필요하면 `-CliChannel stable`을 명시할 수 있습니다.
 
-**기존 CLI 갱신:** `Setup`과 `All`을 선택하면 현재 버전·채널을 확인하고, 최신 stable 후보를 검증한 뒤 `unity self-update --channel stable --yes --format json`을 실행합니다. 기존 beta도 이 절차로 stable로 전환합니다. 특정 버전을 고정하지 않으므로 이후에도 최신 stable을 따릅니다. 업데이트 결과가 `appliesAfterExit`이고 새 버전이 아직 보이지 않으면 **적용 대기**로 표시합니다. 이때 새 터미널에서 `-Action Check`로 확인한 후 중단된 단계를 다시 실행하세요.
+**기존 CLI 갱신:** `Setup`과 `All`을 선택하면 현재 버전·채널을 확인하고, 최신 stable 후보를 검증한 뒤 `unity self-update --channel stable --yes --format json`을 실행합니다. 프리릴리스 설치본도 같은 절차로 stable로 전환하며, 이후에는 최신 stable을 따릅니다. 업데이트 결과가 `appliesAfterExit`이고 새 버전이 아직 보이지 않으면 **적용 대기**로 표시합니다. 새 터미널에서 `-Action Check`로 확인한 후 중단된 단계를 다시 실행하세요.
 
 **Pipeline:** 실제 Unity 6 이상 프로젝트에서 `com.unity.pipeline`을 `Packages/manifest.json` 및 `packages-lock.json`으로 확인합니다. 미설치인 경우 `unity pipeline install --project-path <프로젝트>`를 실행하고, 이미 설치된 경우 버전 목록 조회 및 승인 후 `unity pipeline upgrade --project-path <프로젝트>`를 실행할 수 있습니다. 자동 최신화 정책을 위해 공식 CLI가 버전을 선택하게 하되, 비호환·버전 고정·비레지스트리 패키지 출처는 보존해야 합니다. `.meta`, 씬, 프리팹을 직접 편집하지 않습니다. **버전 조회 성공만으로 최신·호환성을 단정하지 않습니다.**
 
@@ -51,9 +51,8 @@ Batch\UnityCodexSetup.bat -Action All -ProjectPath "D:\Dev\MyUnityProject"
 ### Unity CLI 점검 및 호환성
 
 - `Check`는 `unity skill refresh --help`에서 `--dry-run`을 확인할 수 있을 때 `unity skill refresh --dry-run --format json`으로 갱신 예정 상태를 조회합니다. 결과에서 `would-update`, `would-skip`, `would-prune`과 충돌 여부를 확인합니다.
-- `unity plugin install`·`unity plugin upgrade`는 필요한 다른 Plugin의 자동 설치와 라이선스 수락, 베타 다운로드 경고가 발생할 수 있다. 현재 스크립트는 직접 Plugin 업그레이드를 수행하지 않고, `unity setup codex --dry-run`과 사용자 승인을 거친 기존 절차만 사용한다. 미리보기에서 확인하지 못한 의존성·범위 변경은 승인 범위로 추정하지 않는다.
+- `Codex` 메뉴에서는 `unity setup codex --dry-run`으로 설치 대상과 적용 범위를 확인한 뒤 승인받습니다. 의존 Plugin과 라이선스 확인은 [도구 규칙](../MD/UNITY_TOOLING.md)의 Plugin·Skill 절차를 참고하세요.
 - Unity CLI 실패 시 **진단 힌트**를 표시합니다. `1.0.0`의 `recompile`은 Editor 미응답에 `12`를 반환하고, `close`는 잘못된 프로젝트 경로에 `11`을 반환합니다. 명령별 의미와 오류 메시지를 함께 확인하세요.
-- Pipeline `install/upgrade --format tsv`은 beta.17부터 헤더 + key/value 형식이므로, 별도의 사용자 스크립트가 TSV를 파싱한다면 점검한다. 이 설치 도구는 해당 TSV 출력에 의존하지 않는다.
 
 ## 4. 안전 정책 및 제한
 

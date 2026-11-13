@@ -50,7 +50,7 @@ git remote -v
 
 - 요청과 무관한 변경을 되돌리지 않는다.
 - 한 작업에 필요한 최소 파일만 수정한다.
-- Unity CLI beta.16의 `unity vcs summarize --objects`, `unity vcs guid <guid>`, `unity vcs diff --full` 등은 Scene·Prefab·GUID에 대한 **선택적 읽기 전용 분석 수단**이다. 기존 Git의 상태·stage·commit·push 안전 규칙을 대체하지 않으며, 필요한 경우에만 실제 도움말을 확인해 사용한다.
+- Unity Scene·Prefab·GUID의 변경을 분석할 때는 5.1절의 CLI 조회 명령을 선택적으로 사용한다.
 - 사용자 요청과 관계없는 리팩터링, 파일 이동, 이름 변경 및 서식 변경을 하지 않는다.
 - 사용자가 만들었거나 다른 작업에서 남은 변경을 AI 작업으로 간주하지 않는다.
 - 파일을 수정하기 전에 기존 구조와 변경 이유를 확인한다.
@@ -114,7 +114,7 @@ git diff --check
 - 작업 이력 HTML에 기록한 **작성 시점의** 작업·Git 상태와 현재 상태 문서가 실제 확인 결과에 부합하는가? commit/push 후 결과는 13절에 따라 최종 보고에 별도로 남긴다.
 - 실행하지 않은 검증을 완료했다고 기록하지 않았는가?
 
-### 5.1. beta.16 Unity Scene·Prefab 변경 분석 (선택)
+### 5.1. Unity Scene·Prefab 변경 분석 (선택)
 
 Unity YAML의 오브젝트·컴포넌트·참조 차이를 상세히 확인할 필요가 있을 때, 설치된 Unity CLI에서 지원 여부를 먼저 조회한다.
 

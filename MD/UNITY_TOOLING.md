@@ -23,7 +23,7 @@
 4. 명령마다 종료 코드와 출력을 확인한다. 앞 단계 실패를 숨긴 채 뒤 명령을 일괄 실행하지 않는다.
 5. 아래 명령이 설치 버전에서 지원되는지는 `--help`로 확인한다. 존재하지 않는 옵션·JSON 필드·패키지 이름을 추측하지 않는다.
 6. 최신 조회 실패는 “최신”이 아니라 “확인 불가”로 보고한다. 캐시만으로 온라인 최신 확인을 완료했다고 판단하지 않는다.
-7. Unity CLI 신규 설치와 기존 설치의 갱신은 공식 최신 stable 릴리스를 사용한다. beta 등 프리릴리스가 설치돼 있으면 4절에 따라 stable로 전환한다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 패키지 버전이 선택되면 결과에 표시한다.
+7. Unity CLI 신규 설치와 기존 설치의 갱신은 공식 최신 stable 릴리스를 사용한다. 프리릴리스가 설치돼 있으면 4절에 따라 stable로 전환한다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 패키지 버전이 선택되면 결과에 표시한다.
 
 ## 3. 실행 환경과 설치 확인
 
@@ -72,7 +72,7 @@ unity self-update --help
 unity self-update --check --channel stable --format json
 ```
 
-- `version`의 `data.version`·`data.channel`과 업데이트 조회의 `data.currentVersion`·`data.latestVersion`을 확인한다. 예를 들어 `1.0.0-beta.17`에서 `1.0.0`은 같은 버전 계열의 정식 릴리스다. 최신 stable 후보가 확인되면 최초 도구 점검 및 배치의 `Setup`에서 아래 명령을 실행한다. 이미 최신 stable이어도 이전에 `--target <버전>`으로 고정한 Unity Hub 관리 설치본을 최신판 추적 상태로 되돌리는 데 같은 명령을 사용한다.
+- `version`의 `data.version`·`data.channel`과 업데이트 조회의 `data.currentVersion`·`data.latestVersion`을 확인한다. 최신 stable 후보가 확인되면 최초 도구 점검 및 배치의 `Setup`에서 아래 명령을 실행한다. 이미 최신 stable이어도 이전에 `--target <버전>`으로 고정한 Unity Hub 관리 설치본을 최신판 추적 상태로 되돌리는 데 같은 명령을 사용한다.
 
 ```powershell
 unity self-update --channel stable --yes --format json
@@ -84,7 +84,7 @@ unity self-update --channel stable --yes --format json
 - 업데이트 후 `unity --version`, `unity version --format json`과 실제 실행 파일 경로를 다시 확인한다. `1.0.0`부터 업데이트 JSON이 `installed`, `installedVersion`, `appliesAfterExit`를 반환할 수 있다. 종료 후 적용으로 표시되고 새 바이너리가 아직 확인되지 않으면 **적용 대기**로 기록하고 새 터미널에서 확인한 뒤 Pipeline·MCP 작업을 재개한다. 이전·이후 버전과 채널 및 조회한 stable 후보를 기록한다.
 - 실행 중인 MCP 프로세스 때문에 업데이트가 막히면 해당 클라이언트의 정상적인 MCP 재시작 절차를 이용한다. 모든 Unity/Codex 프로세스를 강제 종료하지 않는다.
 - 업데이트 후 실행 중인 MCP가 새 바이너리를 사용하도록 재시작하고 연결을 다시 확인한다.
-- Unity CLI `1.0.0-beta.16` 이상에서 **Unity Skill 상태를 조회**할 때는 다음 명령을 참고한다. 이 단계는 읽기 전용 점검이며, Skill 설치·동기화를 임의 실행하지 않는다.
+- **Unity Skill 상태와 지원 옵션을 조회**할 때는 다음 명령을 사용한다.
 
 ```powershell
 unity skill --help
@@ -95,9 +95,9 @@ unity skill sync --help
 - `unity skill sync codex`는 해당 Codex용 Skill을 갱신하는 **설정 변경 명령**이다. 사용자 요청·승인이 있으면 기존 Plugin/Skill 중복 여부와 변경 대상을 검토한 뒤 실행하며, 자동 CLI·Pipeline 업데이트 정책을 Skill 자동 갱신으로 확대하지 않는다. 설치 버전에서 지원되지 않으면 추측하여 사용하지 않는다.
 - 도움말에 명령이 없는 오래된 CLI는 공식 설치 안내를 확인하여 갱신하고, 변경된 명령 체계에 맞춰 이후 절차를 수행한다.
 
-### 4.1. beta.17 Plugin·Skill 미리보기와 결과 판정
+### 4.1. Plugin·Skill 미리보기와 결과 판정
 
-- Unity CLI `1.0.0-beta.17` 이상에서는 먼저 `unity plugin --help`, `unity skill refresh --help`로 현재 설치된 명령과 옵션을 확인한다. 다음 예시는 **실제 설치·갱신이 아닌 상태 조회와 미리보기**에만 사용한다.
+설치된 CLI의 도움말에서 명령과 옵션을 확인하고, `--dry-run`이 지원되면 갱신 예정 상태를 조회한다.
 
 ```powershell
 unity plugin --help
@@ -105,7 +105,7 @@ unity skill refresh --help
 unity skill refresh --dry-run --format json
 ```
 
-- `unity plugin install`·`unity plugin upgrade`는 **의존 Plugin 자동 설치**와 각 의존성의 라이선스 절차를 수반할 수 있다. 베타 Plugin 경고, JSON `warnings`, 설치 위치(전역·프로젝트 로컬), 필요한 의존 Plugin과 라이선스를 확인한다. 해당 범위를 사용자에게 알리고 설치·갱신 승인을 별도로 받는다. 조회나 세션 최초 점검만으로 실행하지 않는다.
+- `unity plugin install`·`unity plugin upgrade`는 **의존 Plugin 자동 설치**와 각 의존성의 라이선스 절차를 수반할 수 있다. JSON `warnings`에 표시되는 프리릴리스 경고, 설치 위치(전역·프로젝트 로컬), 필요한 의존 Plugin과 라이선스를 확인하고 해당 범위의 설치·갱신 승인을 받는다.
 - `unity plugin upgrade`가 갱신하는 Skill은 **이미 설치된 범위**에 한정될 수 있다. 전역 Skill만 갱신한 뒤 프로젝트 로컬 Skill도 갱신되었다고 판단하지 않는다.
 - `unity skill refresh --dry-run --format json`은 계획된 결과를 `would-update`·`would-skip`·`would-prune` 등으로 표시한다. 실제 `unity skill refresh --format json`의 `refreshed`·`up-to-date`·`pruned`·`skipped`·`conflict`와 구별하고 `skipReason` 등 실제 반환 필드를 확인한다. 명령 종료 코드가 `0`이어도 모든 Skill이 최신·정상 적용되었다고 결론내리지 않는다.
 - `unity skill sync codex`, `unity skill refresh`, `unity setup codex` 및 Plugin 설치·업그레이드는 사용자 요청·승인 후 실행한다. CLI와 `com.unity.pipeline`의 기존 자동 최신화 정책은 **그대로 유지**한다.
@@ -114,9 +114,7 @@ unity skill refresh --dry-run --format json
 
 Unity 공식 MCP 서버는 unity 실행 파일에 내장된다. 별도의 MCP 버전 업데이트를 추측해서 실행하지 않는다.
 
-Unity CLI beta.16의 새 공식 배포 구성은 Plugin과 Unity Skill을 **별도로 설치·관리**한다. `unity setup codex`는 Plugin 및 Skill을 구성하며, 이전 Plugin에 Skill이 포함된 경우에는 중복을 확인한다. Plugin·Skill·Unity MCP·프로젝트별 Pipeline·Editor 연결은 별도 상태다. Plugin/Skill 설치는 `AGENTS.md` 3절에 따라 사용자 승인 후 수행하며, 이 사전 점검을 계기로 `unity setup codex`나 `unity skill sync codex`를 자동 실행하지 않는다. CLI에서 Plugin 상태 확인이 필요하면 설치 버전의 `codex plugin --help` 등 지원되는 조회 명령을 먼저 확인한다.
-
-Unity CLI beta.16부터 `unity setup all`은 셸 명령을 실행할 수 있는 코딩 에이전트에 Unity MCP를 기본 등록하지 않는다. MCP가 실제로 필요한 경우에만 아래와 같이 명시적으로 점검·설정한다.
+Plugin과 Skill의 설치·인식은 `AGENTS.md` 3절에 따라 확인한다. Codex에서 Unity MCP가 필요하면 `unity setup codex` 또는 `unity setup all` 실행 여부와 별개로 아래 명령을 사용해 등록 상태를 확인한다.
 
 ```powershell
 codex mcp --help
@@ -193,23 +191,23 @@ unity command --detail full --project-path "$UnityProjectRoot" --format json
 
 같은 오류에 대해 상태 변화 없이 전체 점검·재시작·재설치를 반복하지 않는다. 원인 수정 후 필요한 확인을 수행하고, 해결되지 않으면 오류와 가능한 작업 범위를 보고한다. 연결 실패를 이유로 무조건 재설치하지 않는다. 권한 차단을 “Editor가 실행되지 않음”으로 단정하지 않는다. 저장하지 않은 씬을 잃을 수 있는 강제 종료를 하지 않는다.
 
-### 7.1. beta.16 Editor 대기 상태와 모달 팝업 대응
+### 7.1. Editor 대기 상태와 모달 팝업 대응
 
 | 종료 코드 | 오류 이름 | 판정·조치 |
 |---|---|---|
 | `0` | 성공 | 실제 명령 결과도 확인하고 진행 |
 | `1` | 일반 오류·설정 쓰기 실패 가능 | `unity mcp configure` 실패 시 형식·오류 메시지 확인 |
-| `2` | 잘못된 인수·입력 검증 실패 가능 | beta.17의 cloud/context/build/pipeline/projects 명령 구문 재확인 |
+| `2` | 잘못된 인수·입력 검증 실패 가능 | 실패한 하위 명령의 `--help`에서 인수와 옵션 확인 |
 | `4` | `VCS_TOKEN_REQUIRED` 등 명령별 오류 | `--git-token-from-stdin` 빈 입력인지 확인, 저장된 로그인으로 대체하지 않음 |
 | `6` | 일반 실행 실패 등 | 메시지와 원래 원인 확인, 17·18과 구별 |
 | `7` | `NETWORK_UNREACHABLE` | 오프라인·DNS·프록시·서비스 접근 확인 (온라인 조회/업데이트 명령 등) |
 | `11` | `PROJECTS_CLOSE_NOT_A_PROJECT` 등 | CLI 1.0.0의 `close`·`projects close`에서 프로젝트 경로 확인 |
-| `12` | Editor 미응답 (예: `EDITOR_NOT_RUNNING`) | CLI 1.0.0의 `recompile`은 Editor가 응답하지 않으면 `7` 대신 `12`를 반환한다. 프로젝트·Editor·Pipeline 연결 확인 |
+| `12` | Editor 미응답 (예: `EDITOR_NOT_RUNNING`) | `unity recompile`에서 발생하면 프로젝트 경로, Editor 실행 상태, Pipeline 연결 확인 |
 | `14` | `EDITOR_TIMEOUT` | `unity command`의 실행 시간 초과인지 확인 |
 | `17` | `UNAVAILABLE` | Editor 로딩·컴파일·리로드·Safe Mode·과도한 동시 명령 종료 확인 |
 | `18` | `AWAITING_INPUT` | 모달 팝업 확인 후 필요한 버튼의 영향 검토 |
 
-- 코드 값은 **발생한 명령과 CLI 버전의 실제 결과**로 판정한다. 종료 코드 `17`, `18`과 `7`은 beta.16에서 관련 상황을 종전의 일반 오류 `6`보다 구체적으로 구별한다. 모든 명령이 항상 같은 코드를 반환하는 것은 아니다.
+- 종료 코드는 **실패한 명령, CLI 버전, 실제 오류 메시지**와 함께 해석한다.
 - 지원 Unity Editor에서 `unity pipeline editors --format json`으로 로딩·Safe Mode·엔드포인트·모달 팝업 상태를 확인한다. Editor가 로딩 중인 것을 죽거나 연결 실패한 상태로 오인하지 않는다.
 - 모달 팝업이 있는 경우, **실제 명령 도움말을 확인한 다음** 다음과 같이 조회한다.
 
@@ -221,20 +219,18 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 - 버튼 선택은 팝업을 조회하여 **실제 ID·버튼 값과 변경 영향을 확인한 후** 수행한다. 삭제·에셋 변환·프로젝트 설정 변경 등 파괴적이거나 요청 범위를 벗어나는 응답을 자동 승인하지 않는다. 값은 출력으로 확인하며 다음 자리 표시자를 그대로 입력하지 않는다: `unity command editor dialog answer <id> <button>`.
 - 지원하지 않는 Editor 버전에서는 해당 팝업 명령을 사용할 수 없다. 성공했다고 가정하지 말고 Editor 호환성·해당 기능 지원 여부를 보고한다.
 
-### 7.2. beta.16 자동화 출력 호환성
+### 7.2. 자동화 출력 확인
 
-- 지원 Editor에 대한 `unity command --format json`의 출력은 종전의 `success`·`command`·`parameters`·`target` 래퍼 대신 **명령 자체의 결과**가 될 수 있다. `--format ndjson`은 같은 결과를 줄 단위로 출력하며, TSV는 헤더 없이 레코드만 출력한다. 기존 파서가 고정 래퍼·헤더에 의존하는지 점검한다.
+- 지원 Editor에서 `unity command --format json`은 **명령 자체의 결과**를 반환할 수 있다. `--format ndjson`은 결과를 줄 단위로 출력하며, 이 명령의 TSV는 헤더 없이 레코드를 출력한다. 파서가 읽는 필드와 헤더는 실제 출력으로 확인한다.
 - `unity command`의 명령 자체 종료 코드 전달 및 스트리밍 출력을 고려한다. 텍스트 로그와 구조화 JSON이 혼합되는지 실제 출력으로 확인하여, 확인되지 않은 필드를 추측하지 않는다.
-- `unity docs cache --format json`의 목록은 beta.16에서 `data.items`에 있으므로, 기존 `data` 배열로 해석하는 자동화가 있다면 별도 호환성 점검을 수행한다.
+- `unity docs cache --format json`에서 목록은 `data.items`에 있다.
+- `unity pipeline install`·`unity pipeline upgrade`의 성공 결과를 TSV로 읽는 경우 헤더와 레이블이 붙은 key/value 행을 기준으로 파서를 검증한다.
 - 이 문서는 **점검 규칙**이며, 특정 프로젝트에 있는 자동화 스크립트를 무단 수정하거나 전체 빌드·테스트를 자동 시작하지 않는다.
 
-### 7.3. beta.17 자동화 출력·인증·테스트 변경
+### 7.3. 자동화의 인증 및 테스트 결과 확인
 
-- `unity pipeline install`·`unity pipeline upgrade`의 `--format tsv` 출력은 beta.17부터 **헤더 + 레이블이 있는 key/value 행**이다. TSV 위치·행 수를 가정하는 기존 파서는 실제 출력으로 재검증한다. 현재 템플릿의 CLI·Pipeline 기본 명령은 그대로 사용하며 무조건 TSV로 변경하지 않는다.
-- `unity skill refresh --format json` 또는 `ndjson`은 작업 결과를 반환한다. `skipped`·`conflict`·`pruned` 결과가 있는지 확인하고, 조회 성공을 모든 설치본 갱신 성공으로 해석하지 않는다.
-- beta.17에서는 일부 인수 오류가 종료 코드 `1` 대신 `2`이고, `unity projects`의 Git 토큰 빈 입력은 `4`, 외부 서비스 접근 실패는 `7`, 시간 초과는 `14`를 반환할 수 있다. **실제 명령과 오류 메시지**를 함께 해석하여 인증 실패·네트워크 실패·인수 오류를 구분한다. Git CLI 자체의 `git push` 종료 코드까지 이 표에 대입하지 않는다.
-- Editor 테스트를 MCP로 비동기 실행한 경우 완료·실패 상태를 확인하고 테스트 리포트가 실제로 작성되었는지 검증한다. beta.17의 비동기 대기 수정이 모든 테스트의 통과를 보장하지는 않는다.
-- 설치·업그레이드, Plugin·Skill 갱신과 인증·클라우드 연결 설정은 `--help` 및 승인 정책에 따라 수행한다. 이번 릴리스만을 이유로 프로젝트 설정·원격 저장소를 임의 변경하지 않는다.
+- `unity projects`의 Git 토큰 빈 입력, 외부 서비스 접근 실패, 시간 초과는 각각 종료 코드 `4`, `7`, `14`를 반환할 수 있다. Unity CLI와 Git CLI의 오류는 각 명령의 출력으로 판정한다.
+- Editor 테스트를 MCP로 비동기 실행한 경우 완료·실패 상태와 생성된 테스트 리포트를 확인한다.
 
 ## 8. 작업 진행과 결과 보고
 
@@ -271,9 +267,7 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 
 ## 10. 공식 근거와 유지보수
 
-- CLI 채널·업데이트 절차 검토일은 2026-11-13이다.
-- 검토 기준 버전은 Unity CLI `1.0.0-beta.17`과 `1.0.0`이다.
-- 공식 Unity CLI 문서를 대조하고 공식 Linux CLI에서 버전·업데이트 조회와 미리보기를 확인했다.
+- 2026-11-13에 공식 stable 배포 목록과 Linux CLI `1.0.0`을 대조했다. 버전·업데이트 조회, Codex 설정 미리보기, 관련 명령 도움말을 확인했다.
 
 검토 기준 버전은 문서 작성 당시의 명령어 검증 이력이며, 실제 작업 시 사용할 CLI 버전을 고정하거나 자동 업데이트를 제한하지 않는다.
 
