@@ -5,7 +5,10 @@
 param(
     [ValidateSet('Menu', 'Check', 'Setup', 'Codex', 'Mcp', 'All')]
     [string]$Action = 'Menu',
-    [string]$ProjectPath = ''
+    [string]$ProjectPath = '',
+    # Selects the channel for a new CLI install. Omit to choose at the prompt.
+    [ValidateSet('stable', 'beta')]
+    [string]$CliChannel
 )
 
 $ErrorActionPreference = 'Stop'
@@ -14,6 +17,7 @@ $OutputEncoding = [Console]::OutputEncoding
 $script:FailedSteps = 0
 $script:ProjectRoot = $null
 $script:UnityAvailable = $false
+$script:UnityCliRelease = $null
 
 function Write-Section([string]$Title) {
     Write-Host "`n========== $Title ==========" -ForegroundColor Cyan
@@ -138,15 +142,45 @@ function Get-PipelineResolvedVersion {
     }
 }
 
+function Get-UnityCliRelease([string]$Version) {
+    $pattern = '^v?(?<core>\d+\.\d+\.\d+)(?:-(?<prerelease>[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$'
+    if ($Version -notmatch $pattern) { return $null }
+
+    $core = [version]$Matches['core']
+    $prerelease = $Matches['prerelease']
+    $channel = 'prerelease'
+    $betaNumber = $null
+    if (-not $prerelease) { $channel = 'stable' }
+    elseif ($prerelease -match '^beta\.(\d+)$') {
+        $channel = 'beta'
+        $betaNumber = [long]$Matches[1]
+    }
+    return [pscustomobject]@{
+        Version = $Version.TrimStart('v')
+        Core = $core
+        Channel = $channel
+        BetaNumber = $betaNumber
+    }
+}
+
 function Test-Cli {
     Write-Section 'Unity CLI'
+    $script:UnityAvailable = $false
+    $script:UnityCliRelease = $null
     if (-not (Test-Exe 'unity')) {
         Write-Warn 'Unity CLI (unity) was not found in PATH.'
-        $script:UnityAvailable = $false
         return
     }
-    $code = Invoke-Tool 'unity' @('--version')
-    if ($code -ne 0) { Write-Fail 'unity --version failed.'; $script:UnityAvailable = $false; return }
+    try {
+        $versionText = (& unity --format human --version | Out-String).Trim()
+        if ($LASTEXITCODE -ne 0) { throw "Exit code $LASTEXITCODE." }
+        $script:UnityCliRelease = Get-UnityCliRelease $versionText
+        if (-not $script:UnityCliRelease) { throw "Unrecognized version: $versionText" }
+    } catch {
+        Write-Fail "Could not identify the Unity CLI version: $($_.Exception.Message)"
+        return
+    }
+    Write-Note "Unity CLI $($script:UnityCliRelease.Version) ($($script:UnityCliRelease.Channel))"
     $code = Invoke-Tool 'unity' @('pipeline', '--help')
     if ($code -ne 0) {
         Write-Fail 'The unity command does not expose the expected Pipeline CLI. Check PATH for a conflicting executable.'
@@ -176,37 +210,66 @@ function Refresh-ProcessPath {
 
 function Install-UnityCli {
     Write-Section 'Install Unity CLI (missing only)'
+    $channel = $CliChannel
+    if (-not $channel) {
+        $channel = Read-Host 'Unity CLI install channel [stable (default)/beta]'
+        if ([string]::IsNullOrWhiteSpace($channel)) { $channel = 'stable' }
+        $channel = $channel.Trim()
+        if ($channel -notin @('stable', 'beta')) {
+            Write-Fail "Unknown CLI install channel: $channel. Choose stable or beta."
+            return
+        }
+    }
+    $channel = $channel.ToLowerInvariant()
+    $manifestName = 'latest.json'
+    $installerChannel = ''
+    if ($channel -eq 'beta') {
+        $manifestName = 'latest-beta.json'
+        $installerChannel = 'beta'
+    }
+
     Write-Note 'Official Windows sources: Unity CLI PowerShell installer or winget Unity.CLI.'
     Write-Note 'Installer script URL: https://unity.com/install.ps1'
     Write-Warn 'The official installer is downloaded over HTTPS and executed locally; review the script before approving.'
-    if (-not (Confirm-Change 'Download the official Unity CLI beta installer for review?')) { Write-Note 'Skipped Unity CLI installation.'; return }
+    if (-not (Confirm-Change "Check the $channel release and download the official installer for review?")) {
+        Write-Note 'Skipped Unity CLI installation.'
+        return
+    }
     $scriptPath = Join-Path ([IO.Path]::GetTempPath()) ('unity-cli-install-' + [guid]::NewGuid().ToString('N') + '.ps1')
-    $oldChannel = [Environment]::GetEnvironmentVariable('UNITY_CLI_CHANNEL', 'Process')
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+        $manifestUrl = "https://public-cdn.cloud.unity3d.com/hub/prod/cli/$manifestName"
+        $manifest = Invoke-RestMethod -Uri $manifestUrl -UseBasicParsing -MaximumRedirection 5
+        $release = Get-UnityCliRelease $manifest.version
+        if (-not $release -or $release.Channel -ne $channel) {
+            Write-Fail "The $channel feed did not return a $channel release (reported: $($manifest.version)). Choose a channel with an available release."
+            return
+        }
         Invoke-WebRequest -Uri 'https://unity.com/install.ps1' -UseBasicParsing -MaximumRedirection 5 -OutFile $scriptPath
         if (-not (Test-Path -LiteralPath $scriptPath -PathType Leaf)) { throw 'Official installer download did not produce a file.' }
         if ((Get-Item -LiteralPath $scriptPath).Length -lt 100) { throw 'Downloaded installer file is unexpectedly small.' }
         $sha256 = (Get-FileHash -LiteralPath $scriptPath -Algorithm SHA256).Hash
         Write-Note "Downloaded official installer SHA256: $sha256"
         Write-Note "Downloaded installer is at: $scriptPath"
-        if (-not (Confirm-Change 'Execute this downloaded script? (Review the file first if required)')) {
+        if (-not (Confirm-Change "Execute the downloaded script to install Unity CLI $($release.Version) ($channel)?")) {
             Write-Note 'Installer execution skipped.'
             return
         }
-        $env:UNITY_CLI_CHANNEL = 'beta'
-        Write-Note 'Running official Unity CLI beta installer in this PowerShell session.'
-        & $scriptPath
-        if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { Write-Fail "Unity installer returned $LASTEXITCODE." }
+        # Pin the reviewed release so the official installer's latest fallback cannot change channels.
+        & $scriptPath -Target $release.Version -Channel $installerChannel
+        if (-not $?) { throw "Official installer returned exit code $LASTEXITCODE." }
     } catch {
         Write-Fail "CLI installation failed: $($_.Exception.Message)"
     } finally {
-        [Environment]::SetEnvironmentVariable('UNITY_CLI_CHANNEL', $oldChannel, 'Process')
         Remove-Item -LiteralPath $scriptPath -ErrorAction SilentlyContinue
     }
     Refresh-ProcessPath
     Test-Cli
     if (-not $script:UnityAvailable) { Write-Warn 'Open a new terminal and run Check. PATH changes may not be visible yet.' }
+    elseif ($script:UnityCliRelease.Version -ne $release.Version) {
+        Write-Fail "PATH resolves to $($script:UnityCliRelease.Version), expected $($release.Version)."
+        $script:UnityAvailable = $false
+    }
 }
 
 function Show-UnityProject {
@@ -239,18 +302,13 @@ function Test-Codex {
     }
     if ($script:UnityAvailable) {
         [void](Invoke-Tool 'unity' @('skill', 'install', '--list'))
-        # Beta.17: inspect the Skill refresh plan without installing or changing a Skill.
-        $versionText = (& unity --version 2>$null | Out-String).Trim()
-        $supportsRefreshPreview = $versionText -match '^1\.0\.0-beta\.(\d+)'
-        if ($supportsRefreshPreview -and [int]$Matches[1] -ge 17) {
-            $helpCode = Invoke-Tool 'unity' @('skill', 'refresh', '--help')
-            if ($helpCode -eq 0) {
-                $previewCode = Invoke-Tool 'unity' @('skill', 'refresh', '--dry-run', '--format', 'json')
-                if ($previewCode -ne 0) { Write-Warn 'Skill refresh preview unavailable; no refresh was performed.' }
-                else { Write-Note 'Review per-Skill would-update/would-skip/would-prune statuses and conflicts manually.' }
-            }
+        $help = (& unity skill refresh --help | Out-String)
+        if ($LASTEXITCODE -eq 0 -and $help -match '(?m)^\s+--dry-run\b') {
+            $previewCode = Invoke-Tool 'unity' @('skill', 'refresh', '--dry-run', '--format', 'json')
+            if ($previewCode -ne 0) { Write-Warn 'Skill refresh preview unavailable; no refresh was performed.' }
+            else { Write-Note 'Review per-Skill would-update/would-skip/would-prune statuses and conflicts manually.' }
         } else {
-            Write-Note 'Skill refresh dry-run is skipped (requires verified beta.17+).'
+            Write-Note 'Skill refresh dry-run is skipped (option not detected in CLI help).'
         }
     }
 }
@@ -262,21 +320,73 @@ function Test-EditorConnectivity {
     if ($code -ne 0) { Write-Warn 'Unity Editor may be closed, loading, awaiting input, or blocked by permissions.' }
 }
 
+function Get-UnityCliUpdateCandidate([string]$Channel) {
+    $current = $script:UnityCliRelease
+    Write-Note "Checking the $Channel feed for updates to $($current.Version) ($($current.Channel))."
+    try {
+        $json = (& unity self-update --check --channel $Channel --format json | Out-String)
+        if ($LASTEXITCODE -ne 0) { throw "Exit code $LASTEXITCODE." }
+        $check = $json | ConvertFrom-Json
+        if ($check.success -ne $true -or $check.data.currentVersion -ne $current.Version) {
+            throw 'Update response did not identify the current CLI.'
+        }
+        $candidate = Get-UnityCliRelease $check.data.latestVersion
+        if (-not $candidate) { throw 'Update response did not identify a release.' }
+    } catch {
+        Write-Warn "Could not verify updates for $Channel`: $($_.Exception.Message)"
+        return
+    }
+
+    if ($candidate.Channel -ne $Channel) {
+        Write-Note "The $Channel feed returned $($candidate.Version) ($($candidate.Channel)). No $Channel update was selected."
+        return
+    }
+    $newer = $candidate.Core -gt $current.Core
+    if ($candidate.Core -eq $current.Core -and $current.Channel -eq 'beta') {
+        $newer = $candidate.Channel -eq 'stable' -or $candidate.BetaNumber -gt $current.BetaNumber
+    }
+    if ($newer) { return $candidate }
+    Write-Note "The $Channel feed has no newer release (reported: $($candidate.Version))."
+}
+
+function Update-UnityCli {
+    Write-Section 'CLI version policy'
+    $current = $script:UnityCliRelease
+    if ($current.Channel -notin @('stable', 'beta')) {
+        Write-Warn "Automatic update selection is unavailable for $($current.Version)."
+        return
+    }
+
+    $candidate = Get-UnityCliUpdateCandidate 'stable'
+    if ($current.Channel -eq 'beta') {
+        $switchToStable = $candidate -and (Confirm-Change "Switch from $($current.Version) (beta) to $($candidate.Version) (stable)?")
+        if (-not $switchToStable) {
+            $candidate = Get-UnityCliUpdateCandidate 'beta'
+            if (-not $candidate -or -not (Confirm-Change "Update to $($candidate.Version) (beta)?")) {
+                Write-Note "Keeping Unity CLI $($current.Version) (beta)."
+                return
+            }
+        }
+    } elseif (-not $candidate -or -not (Confirm-Change "Update to $($candidate.Version) (stable)?")) {
+        return
+    }
+
+    $result = Invoke-Tool 'unity' @('self-update', '--channel', $candidate.Channel, '--target', $candidate.Version, '--yes')
+    if ($result -ne 0) { Write-Fail 'CLI update failed.'; return }
+    Test-Cli
+    if (-not $script:UnityAvailable -or $script:UnityCliRelease.Version -ne $candidate.Version) {
+        Write-Fail "CLI update to $($candidate.Version) could not be verified on PATH."
+        $script:UnityAvailable = $false
+    }
+}
+
 function Setup-CliAndPipeline {
     Test-Cli
     if (-not $script:UnityAvailable) {
         if (-not (Test-Exe 'unity')) { Install-UnityCli }
         else { Write-Warn 'Existing unity executable failed validation. Not installing over it automatically.' }
     } else {
-        Write-Section 'CLI version policy'
-        $code = Invoke-Tool 'unity' @('self-update', '--check', '--format', 'json')
-        if ($code -eq 0) {
-            if (Confirm-Change 'Apply official current-channel CLI self-update (no-op if already current)?') {
-                $result = Invoke-Tool 'unity' @('self-update', '--yes')
-                if ($result -ne 0) { Write-Fail 'CLI update failed.' }
-                else { Test-Cli }
-            }
-        } else { Write-Warn 'Update availability could not be verified. No CLI update attempted.' }
+        Update-UnityCli
     }
     Show-UnityProject
     if (-not $script:ProjectRoot) {

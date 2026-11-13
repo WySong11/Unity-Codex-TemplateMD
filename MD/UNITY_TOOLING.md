@@ -23,7 +23,7 @@
 4. 명령마다 종료 코드와 출력을 확인한다. 앞 단계 실패를 숨긴 채 뒤 명령을 일괄 실행하지 않는다.
 5. 아래 명령이 설치 버전에서 지원되는지는 `--help`로 확인한다. 존재하지 않는 옵션·JSON 필드·패키지 이름을 추측하지 않는다.
 6. 최신 조회 실패는 “최신”이 아니라 “확인 불가”로 보고한다. 캐시만으로 온라인 최신 확인을 완료했다고 판단하지 않는다.
-7. CLI는 현재 릴리스 채널의 최신을 기본으로 한다. beta 사용 중이면 beta 최신을 확인하며, stable/beta 간 이동은 별도 지시 없이 하지 않는다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 버전이 선택되면 결과에 표시한다.
+7. 신규 CLI 설치의 기본 채널은 stable이며, 사용자가 beta를 선택할 수 있다. 기존 설치는 현재 채널을 유지하는 것이 기본이다. beta에서 더 새로운 stable이 확인되면 전환 여부를 사용자에게 확인하고 4절에 따라 처리한다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 버전이 선택되면 결과에 표시한다.
 
 ## 3. 실행 환경과 설치 확인
 
@@ -58,29 +58,33 @@ Get-Command codex -All -ErrorAction SilentlyContinue
 
 ## 4. Unity CLI 최신 확인 및 업데이트
 
-다음 명령을 단계별로 실행한다.
+현재 실행 파일의 버전과 채널을 확인한다. 지원되는 경우 `unity diagnose update --format json`으로 설치 방식과 업데이트 명령도 확인한다.
 
 ```powershell
 unity --version
+unity version --format json
 unity self-update --help
-unity self-update --check --format json
 ```
 
-새 버전이 확인된 경우:
+`--channel`과 `--check`가 지원되면 현재 채널의 후보를 조회한다. beta 사용 중에는 stable 후보도 함께 조회한다. 아래 두 명령은 beta 사용 시 예시이며 stable 사용 시에는 stable만 조회한다.
 
 ```powershell
-unity self-update --yes
+unity self-update --check --channel beta --format json
+unity self-update --check --channel stable --format json
 ```
 
-다시 검증한다.
+- `version`의 `data.version`·`data.channel`과 업데이트 조회의 `data.currentVersion`·`data.latestVersion`을 확인한다. 예를 들어 `1.0.0-beta.17`에서 `1.0.0`은 같은 버전 계열의 새 정식 릴리스다. 조회에 사용한 채널과 반환된 버전의 채널을 각각 확인한다. **beta 조회가 `1.0.0`을 반환하더라도 stable 전환 후보로 처리한다.**
+- **stable 전환 선택:** 현재 버전·채널과 전환할 버전·채널을 제시한다. 사용자가 전환을 선택한 경우 확인한 stable 버전을 `--target`으로 지정한다. 아래 예시는 `1.0.0`을 선택한 경우다.
 
 ```powershell
-unity --version
-unity self-update --check --format json
+unity self-update --channel stable --target 1.0.0 --yes
 ```
 
-- 업데이트 전후 버전, 채널, 온라인 확인 결과를 기록한다.
+- **beta 유지 선택 또는 응답 없음:** 현재 설치를 유지한다. 새 beta가 확인되면 기존 동일 채널 정책에 따라 해당 beta 버전을 명시해 갱신할 수 있다. 사용자가 현재 버전 유지를 선택했거나 프로젝트·사용자가 고정한 버전이 있으면 그 선택을 따른다. 조회 실패, 채널 불일치, 최신 또는 더 오래된 후보는 설치 근거로 사용하지 않는다.
+- **stable 사용 중:** 새 stable이 확인된 경우 기존 동일 채널 정책에 따라 `--channel stable --target <확인한 버전> --yes`로 갱신한다. 다른 채널로 이동하려면 사용자 요청이 필요하다.
+- 채널별 조회를 지원하지 않는 구버전은 지원되는 읽기 전용 조회나 공식 배포 정보로 확인한다. 설치할 버전·채널을 확정할 수 없으면 업데이트를 보류한다.
 - 패키지 관리자로 설치되어 자체 업데이트 대신 관리자 명령을 안내하면, 실제 설치에 사용된 관리자의 공식 업데이트 절차를 따른다. 별도 설치본을 중복 생성하지 않는다.
+- 업데이트 후 `unity --version`, `unity version --format json`과 실제 실행 파일 경로를 다시 확인한다. 결과에는 이전·이후 버전과 채널, 조회한 후보, 사용자가 선택한 전환 또는 유지 여부를 기록한다.
 - 실행 중인 MCP 프로세스 때문에 업데이트가 막히면 해당 클라이언트의 정상적인 MCP 재시작 절차를 이용한다. 모든 Unity/Codex 프로세스를 강제 종료하지 않는다.
 - 업데이트 후 실행 중인 MCP가 새 바이너리를 사용하도록 재시작하고 연결을 다시 확인한다.
 - Unity CLI `1.0.0-beta.16` 이상에서 **Unity Skill 상태를 조회**할 때는 다음 명령을 참고한다. 이 단계는 읽기 전용 점검이며, Skill 설치·동기화를 임의 실행하지 않는다.
@@ -247,7 +251,7 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 
 | 항목 | 확인 전 | 확인 후 | 판정 |
 | --- | --- | --- | --- |
-| Unity CLI | 실제 버전·채널 | 실제 버전·채널 | 최신 / 업데이트 / 확인 불가 |
+| Unity CLI | 실제 버전·채널 | 실제 버전·채널 | 최신 / 업데이트 / stable 전환 / beta 유지 / 확인 불가 |
 | Codex Unity Skill | 실제 Plugin·Skill 설치 상태 | 설치·인식 확인 결과 | 최신 확인 / 갱신 필요 / 확인 불가 (설치·동기화는 별도 승인) |
 | Unity MCP 등록 | 없음 / 있음 / 비활성 | 실제 상태 | 정상 / 보완 / 차단 |
 | Unity MCP 호출 | 미확인 | 실제 조회 결과 | 연결 성공 / 실패 / 재시작 필요 |
@@ -266,9 +270,9 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 
 ## 10. 공식 근거와 유지보수
 
-공식 명령 문서 검토일: 2026-11-06  
-검토 기준 버전: Unity CLI 1.0.0-beta.17  
-검토 방식: 공식 Unity CLI 릴리스 노트·레퍼런스 대조(사용자 PC에서 명령 직접 실행한 검증 아님)
+- CLI 채널·업데이트 절차 검토일은 2026-11-13이다.
+- 검토 기준 버전은 Unity CLI `1.0.0-beta.17`과 `1.0.0`이다.
+- 공식 Unity CLI 문서를 대조하고 공식 Linux CLI에서 버전·업데이트 조회와 미리보기를 확인했다.
 
 검토 기준 버전은 문서 작성 당시의 명령어 검증 이력이며, 실제 작업 시 사용할 CLI 버전을 고정하거나 자동 업데이트를 제한하지 않는다.
 
