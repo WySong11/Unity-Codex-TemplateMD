@@ -104,6 +104,7 @@
 ### Unity CLI beta.16의 실행 중 Editor 빌드 (지원 구성에 한함)
 
 - Unity CLI `1.0.0-beta.16` 이상은 `unity build --target`을 **해당 프로젝트를 이미 열어둔 Unity Editor로 수행**할 수 있다. 반드시 설치된 CLI와 연결된 Editor의 지원 여부·호환성을 확인하고, 실행 전 `unity build --help`로 실제 타깃·옵션을 확인한다.
+- Unity CLI `1.0.0`부터 빌드 출력 경로는 `unity build --output <경로>` 또는 `-o`로 지정한다. 기존 `--output-path`는 호환된다. 테스트 리포트 파일은 `unity test --output <파일>`로 지정하며, `1.0.0`부터 `-o`도 지원한다.
 - 열린 Editor를 사용할 경우 **활성 빌드 타깃이 변경될 수 있다.** 프로젝트의 저장되지 않은 씬·설정·사용자 변경을 보호하고, 대상 플랫폼 전환 및 재임포트 영향을 미리 검토한다.
 - Editor가 Play Mode, 스크립트 컴파일 중이거나 모달 팝업을 기다릴 때에는 열린 Editor 빌드가 거부될 수 있다. 연결 상태 및 `UNITY_TOOLING.md` 7.1절의 오류 분류를 먼저 확인한다.
 - `--execute-method`, `--profile`, `--args`, `--accelerator`/`--no-accelerator`, `--log-file`, `--editor-path`, 열린 Editor와 다른 `--editor-version`, `--architecture`, `--build-target-group`, `--android-*` 등 **별도 Editor 프로세스가 필요한 옵션**을 사용하는 경우에는 열린 Editor 방식으로 강행하지 않는다. 공식 CLI 도움말과 기존 CI 방법을 따른다.
@@ -114,7 +115,9 @@
 # 지원되는 빌드 대상과 옵션을 우선 확인
 unity build --help
 # 실제 대상·프로젝트 경로를 확인한 뒤 실행 (임의로 타깃 값을 가정하지 않음)
-# unity build --target <확인된-빌드-타깃> --project-path "$UnityProjectRoot"
+# unity build "$UnityProjectRoot" --target <확인된-빌드-타깃>
+# unity build "$UnityProjectRoot" --target StandaloneWindows64 --output "./Build/MyGame.exe"
+# unity test "$UnityProjectRoot" --mode EditMode -o "./TestResults/EditMode.xml"
 ```
 
 존재하지 않는 빌드 진입점이나 확인하지 않은 명령을 실행 가능한 프로젝트 명령처럼 제시하지 않는다. 구체적인 명령을 추가할 때는 설치된 Unity·CLI 버전의 공식 사용법을 확인한다.

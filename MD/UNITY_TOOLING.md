@@ -23,7 +23,7 @@
 4. 명령마다 종료 코드와 출력을 확인한다. 앞 단계 실패를 숨긴 채 뒤 명령을 일괄 실행하지 않는다.
 5. 아래 명령이 설치 버전에서 지원되는지는 `--help`로 확인한다. 존재하지 않는 옵션·JSON 필드·패키지 이름을 추측하지 않는다.
 6. 최신 조회 실패는 “최신”이 아니라 “확인 불가”로 보고한다. 캐시만으로 온라인 최신 확인을 완료했다고 판단하지 않는다.
-7. 신규 CLI 설치의 기본 채널은 stable이며, 사용자가 beta를 선택할 수 있다. 기존 설치는 현재 채널을 유지하는 것이 기본이다. beta에서 더 새로운 stable이 확인되면 전환 여부를 사용자에게 확인하고 4절에 따라 처리한다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 버전이 선택되면 결과에 표시한다.
+7. Unity CLI 신규 설치와 기존 설치의 갱신은 공식 최신 stable 릴리스를 사용한다. beta 등 프리릴리스가 설치돼 있으면 4절에 따라 stable로 전환한다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 패키지 버전이 선택되면 결과에 표시한다.
 
 ## 3. 실행 환경과 설치 확인
 
@@ -51,7 +51,7 @@ Get-Command codex -All -ErrorAction SilentlyContinue
 ```
 
 - CLI와 IDE가 같은 Windows/WSL 환경 및 같은 Codex 설정을 쓰는지 확인한다. WSL에 등록한 설정만 보고 Windows 확장 등록을 완료했다고 판단하지 않는다.
-- unity가 없으면 Unity 공식 설치 안내에서 현재 Windows 설치 방법을 확인하여 설치한다. 임의의 동명 npm 패키지를 설치하지 않는다.
+- unity가 없으면 Unity 공식 Windows 설치 방법 또는 [설치 배치 파일](../Batch/UnityCodexSetup_README.md)을 사용해 최신 stable을 설치한다. 정식 릴리스의 가용성을 확인한 뒤 설치한다.
 - 설치 후 새 셸에서 경로와 버전을 다시 확인한다. 여러 unity 실행 파일이 있으면 실제 호출되는 경로와 업데이트된 경로가 같은지 확인한다.
 - codex 실행 파일이 없더라도 IDE 확장이 없는 것은 아니다. 공식 Plugin 및 MCP 설정은 IDE의 실제 실행 환경에서 확인하며, CLI 검증 불가는 별도로 보고한다.
 - 이 문서는 도구 점검 지침이다. Unity 공식 Codex Plugin의 신규 설치 또는 재설치는 `AGENTS.md` 3절에 따라 별도 사용자 요청·승인이 필요하며, 사전 점검을 계기로 자동 설치하지 않는다.
@@ -66,25 +66,22 @@ unity version --format json
 unity self-update --help
 ```
 
-`--channel`과 `--check`가 지원되면 현재 채널의 후보를 조회한다. beta 사용 중에는 stable 후보도 함께 조회한다. 아래 두 명령은 beta 사용 시 예시이며 stable 사용 시에는 stable만 조회한다.
+`--channel`과 `--check`가 지원되면 설치된 채널과 관계없이 stable 후보를 조회한다.
 
 ```powershell
-unity self-update --check --channel beta --format json
 unity self-update --check --channel stable --format json
 ```
 
-- `version`의 `data.version`·`data.channel`과 업데이트 조회의 `data.currentVersion`·`data.latestVersion`을 확인한다. 예를 들어 `1.0.0-beta.17`에서 `1.0.0`은 같은 버전 계열의 새 정식 릴리스다. 조회에 사용한 채널과 반환된 버전의 채널을 각각 확인한다. **beta 조회가 `1.0.0`을 반환하더라도 stable 전환 후보로 처리한다.**
-- **stable 전환 선택:** 현재 버전·채널과 전환할 버전·채널을 제시한다. 사용자가 전환을 선택한 경우 확인한 stable 버전을 `--target`으로 지정한다. 아래 예시는 `1.0.0`을 선택한 경우다.
+- `version`의 `data.version`·`data.channel`과 업데이트 조회의 `data.currentVersion`·`data.latestVersion`을 확인한다. 예를 들어 `1.0.0-beta.17`에서 `1.0.0`은 같은 버전 계열의 정식 릴리스다. 최신 stable 후보가 확인되면 최초 도구 점검 및 배치의 `Setup`에서 아래 명령을 실행한다. 이미 최신 stable이어도 이전에 `--target <버전>`으로 고정한 Unity Hub 관리 설치본을 최신판 추적 상태로 되돌리는 데 같은 명령을 사용한다.
 
 ```powershell
-unity self-update --channel stable --target 1.0.0 --yes
+unity self-update --channel stable --yes --format json
 ```
 
-- **beta 유지 선택 또는 응답 없음:** 현재 설치를 유지한다. 새 beta가 확인되면 기존 동일 채널 정책에 따라 해당 beta 버전을 명시해 갱신할 수 있다. 사용자가 현재 버전 유지를 선택했거나 프로젝트·사용자가 고정한 버전이 있으면 그 선택을 따른다. 조회 실패, 채널 불일치, 최신 또는 더 오래된 후보는 설치 근거로 사용하지 않는다.
-- **stable 사용 중:** 새 stable이 확인된 경우 기존 동일 채널 정책에 따라 `--channel stable --target <확인한 버전> --yes`로 갱신한다. 다른 채널로 이동하려면 사용자 요청이 필요하다.
+- 조회가 실패하거나 stable 후보가 확인되지 않으면 현재 설치를 유지하고 최신 여부를 확인할 수 없다고 보고한다. 기존 stable보다 오래된 stable 후보로는 갱신하지 않는다.
 - 채널별 조회를 지원하지 않는 구버전은 지원되는 읽기 전용 조회나 공식 배포 정보로 확인한다. 설치할 버전·채널을 확정할 수 없으면 업데이트를 보류한다.
 - 패키지 관리자로 설치되어 자체 업데이트 대신 관리자 명령을 안내하면, 실제 설치에 사용된 관리자의 공식 업데이트 절차를 따른다. 별도 설치본을 중복 생성하지 않는다.
-- 업데이트 후 `unity --version`, `unity version --format json`과 실제 실행 파일 경로를 다시 확인한다. 결과에는 이전·이후 버전과 채널, 조회한 후보, 사용자가 선택한 전환 또는 유지 여부를 기록한다.
+- 업데이트 후 `unity --version`, `unity version --format json`과 실제 실행 파일 경로를 다시 확인한다. `1.0.0`부터 업데이트 JSON이 `installed`, `installedVersion`, `appliesAfterExit`를 반환할 수 있다. 종료 후 적용으로 표시되고 새 바이너리가 아직 확인되지 않으면 **적용 대기**로 기록하고 새 터미널에서 확인한 뒤 Pipeline·MCP 작업을 재개한다. 이전·이후 버전과 채널 및 조회한 stable 후보를 기록한다.
 - 실행 중인 MCP 프로세스 때문에 업데이트가 막히면 해당 클라이언트의 정상적인 MCP 재시작 절차를 이용한다. 모든 Unity/Codex 프로세스를 강제 종료하지 않는다.
 - 업데이트 후 실행 중인 MCP가 새 바이너리를 사용하도록 재시작하고 연결을 다시 확인한다.
 - Unity CLI `1.0.0-beta.16` 이상에서 **Unity Skill 상태를 조회**할 때는 다음 명령을 참고한다. 이 단계는 읽기 전용 점검이며, Skill 설치·동기화를 임의 실행하지 않는다.
@@ -138,6 +135,8 @@ unity mcp configure codex
 
 기존 등록이 낡았으면 변경 예정 내용을 확인한 다음 갱신한다. 지원되는 옵션은 도움말을 따른다. 여러 프로젝트를 사용할 때 전역 설정을 한 프로젝트로 고정하지 않는다. 프로젝트 한정 등록이 필요하면 지원 여부를 확인하여 로컬 범위를 사용한다.
 
+Unity CLI `1.0.0`부터 Editor MCP 등록에 `--tool-groups`가 추가된다. 기존 등록은 CLI 업데이트만으로 바뀌지 않는다. 재등록 전 `unity mcp configure codex --dry-run --format json`에서 예정 인수를 확인한다. 그룹 방식으로 바뀌면 Codex에 노출되는 도구 이름이 달라질 수 있으므로 기존 도구 허용 목록과 비교한다.
+
 주의: 공식 configure 명령은 Codex의 네트워크 관련 설정도 조정할 수 있다. dry-run 및 적용 전후 차이를 검토하고, 불필요한 권한 확대나 승인 정책 변경은 하지 않는다. 환경 정책이 해당 변경을 금지하면 우회하지 말고 정확히 보고한다.
 
 등록 후 다시 `codex mcp list`로 확인하고 IDE의 MCP 재시작 기능을 사용한다. 실제 MCP 도구 목록을 불러오고, 제공되는 읽기 전용 조회 도구를 한 번 호출한다. 등록만 확인했으면 “등록 완료 / 연결 미확인”으로 구분한다. 꺼짐 또는 권한 철회 상태를 누락으로 취급해 자동 재활성화하지 않는다.
@@ -146,7 +145,7 @@ unity mcp configure codex
 
 먼저 현재 프로젝트의 Packages/manifest.json에서 com.unity.pipeline 의존성을 확인한다. packages-lock.json과 실제 로드된 패키지도 확인하여 선언 버전과 해결된 버전을 구분한다.
 
-**자동 최신화 정책 유지:** 이 문서의 최초 전체 점검이 실행되는 경우 Unity CLI는 현재 릴리스 채널의 최신을, 현재 프로젝트의 `com.unity.pipeline`은 공식 레지스트리의 최신을 기본 대상으로 한다. 설치되지 않았으면 설치하고, 구버전이면 지원되는 `upgrade` 절차를 실행한다. 패키지의 `manifest.json`에 일반 버전 번호가 적혀 있다는 이유만으로 이를 명시적인 업데이트 금지로 간주하지 않는다. 다만 사용자·팀의 명시적 버전 고정 또는 업데이트 금지, 다른 출처의 의존성, Unity Editor 비호환, 최신·호환성 확인 불가, 권한 제한이 있으면 기존 예외 규칙에 따라 보류하고 보고한다. **자동 최신화를 이유로 Unity Editor·다른 패키지까지 업그레이드하지 않는다.**
+최초 전체 점검에서 Unity CLI는 4절에 따라 최신 stable로 준비하고, 현재 프로젝트의 `com.unity.pipeline`은 공식 레지스트리에서 CLI가 선택하는 최신 호환 버전을 사용한다. 설치되지 않았으면 설치하고, 구버전이면 지원되는 `upgrade` 절차를 실행한다. 패키지의 `manifest.json`에 일반 버전 번호가 적혀 있다는 이유만으로 이를 명시적인 업데이트 금지로 간주하지 않는다. 다만 사용자·팀의 명시적 버전 고정 또는 업데이트 금지, 다른 출처의 의존성, Unity Editor 비호환, 최신·호환성 확인 불가, 권한 제한이 있으면 기존 예외 규칙에 따라 보류하고 보고한다. **자동 최신화를 이유로 Unity Editor·다른 패키지까지 업그레이드하지 않는다.**
 
 ```powershell
 unity pipeline --help
@@ -204,6 +203,8 @@ unity command --detail full --project-path "$UnityProjectRoot" --format json
 | `4` | `VCS_TOKEN_REQUIRED` 등 명령별 오류 | `--git-token-from-stdin` 빈 입력인지 확인, 저장된 로그인으로 대체하지 않음 |
 | `6` | 일반 실행 실패 등 | 메시지와 원래 원인 확인, 17·18과 구별 |
 | `7` | `NETWORK_UNREACHABLE` | 오프라인·DNS·프록시·서비스 접근 확인 (온라인 조회/업데이트 명령 등) |
+| `11` | `PROJECTS_CLOSE_NOT_A_PROJECT` 등 | CLI 1.0.0의 `close`·`projects close`에서 프로젝트 경로 확인 |
+| `12` | Editor 미응답 (예: `EDITOR_NOT_RUNNING`) | CLI 1.0.0의 `recompile`은 Editor가 응답하지 않으면 `7` 대신 `12`를 반환한다. 프로젝트·Editor·Pipeline 연결 확인 |
 | `14` | `EDITOR_TIMEOUT` | `unity command`의 실행 시간 초과인지 확인 |
 | `17` | `UNAVAILABLE` | Editor 로딩·컴파일·리로드·Safe Mode·과도한 동시 명령 종료 확인 |
 | `18` | `AWAITING_INPUT` | 모달 팝업 확인 후 필요한 버튼의 영향 검토 |
@@ -251,7 +252,7 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 
 | 항목 | 확인 전 | 확인 후 | 판정 |
 | --- | --- | --- | --- |
-| Unity CLI | 실제 버전·채널 | 실제 버전·채널 | 최신 / 업데이트 / stable 전환 / beta 유지 / 확인 불가 |
+| Unity CLI | 실제 버전·채널 | 실제 버전·채널 | 최신 stable / 업데이트 / stable 전환 / 적용 대기 / 확인 불가 |
 | Codex Unity Skill | 실제 Plugin·Skill 설치 상태 | 설치·인식 확인 결과 | 최신 확인 / 갱신 필요 / 확인 불가 (설치·동기화는 별도 승인) |
 | Unity MCP 등록 | 없음 / 있음 / 비활성 | 실제 상태 | 정상 / 보완 / 차단 |
 | Unity MCP 호출 | 미확인 | 실제 조회 결과 | 연결 성공 / 실패 / 재시작 필요 |
