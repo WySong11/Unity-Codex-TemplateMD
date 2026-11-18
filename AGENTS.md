@@ -46,6 +46,7 @@
 - Skill 갱신 상태는 `unity skill refresh --help`에서 `--dry-run` 지원을 확인한 뒤 `unity skill refresh --dry-run --format json`으로 미리 본다. `would-update`, `would-skip`, `would-prune`은 갱신 예정 결과다. 실제 Skill 갱신과 Plugin 업그레이드는 사용자 요청·승인 후 실행한다.
 - Plugin이 제공하는 Skill, 사용자 전역 Skill, 프로젝트 로컬 `.agents/skills/`에 같은 Skill이 있으면 활성화된 경로와 중복 여부를 확인한다. 개별 설치 방식은 사용자가 따로 선택한 경우 기존 설치 상태와 공식 CLI 도움말을 확인해 적용한다.
 - 필요한 Unity Skill이 실제 설치되어 있다면 그 `SKILL.md`와 필요한 참조 자료를 읽고 현재 Unity·CLI·패키지 버전에 맞게 적용한다. 여러 Skill이 관련되면 필요한 것만 선택한다. Skill은 도구 사용 절차를 보조하며 프로젝트 규칙, 사용자의 요청 또는 시스템·도구 권한을 대체하지 않는다.
+- Unity CLI `1.0.1`의 `new-unity-project` Skill에는 플레이 가능한 게임 루프를 만드는 단계가 포함된다. 사용자가 프로젝트 초기 설정이나 기본 씬까지만 요청하면 해당 범위에서 마친다. 게시·Git 처리는 사용자 요청과 `MD/GIT.md`를 따른다.
 - Plugin·Skill이 없더라도 가능한 범위에서 기존 프로젝트 구조와 공식 자료에 따라 작업한다. **Plugin 미설치 / Skill 미인식 / MCP 미연결 / Pipeline 미설치**를 서로 다른 상태로 보고하며, 사용하지 않은 Skill을 적용했다고 주장하지 않는다.
 
 ## 4. 작업 전 확인

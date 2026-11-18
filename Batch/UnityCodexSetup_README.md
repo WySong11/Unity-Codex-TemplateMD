@@ -46,7 +46,7 @@ Batch\UnityCodexSetup.bat -Action All -ProjectPath "D:\Dev\MyUnityProject"
 
 **Codex:** `codex` 실행 파일 및 Plugin과 Unity Skill 표시 상태를 확인합니다. VS Code Codex 확장과 명령줄 `codex` CLI는 환경이 다를 수 있습니다. Plugin·Skill의 설치는 별도의 `Codex` 메뉴로 실행하며 `unity setup codex --dry-run`과 사용자 승인이 선행합니다. CLI를 찾을 수 없다고 VS Code 확장이 설치되지 않았다고 판단하지 않습니다. Codex CLI 자체를 자동 설치하지 않습니다.
 
-**Unity MCP:** Codex MCP 목록과 `unity mcp configure codex --dry-run`의 예정 설정을 확인한 뒤 별도 승인을 받아 적용합니다. Unity CLI `1.0.0`부터 재등록 시 `--tool-groups`가 추가될 수 있습니다. 도구 이름이 바뀌면 기존 Codex 도구 허용 목록을 함께 확인하세요. 등록 후 Codex를 재시작하고 읽기 전용 Unity MCP 호출을 검증합니다.
+**Unity MCP:** Codex MCP 목록과 `unity mcp configure codex --dry-run`의 예정 설정을 확인한 뒤 별도 승인을 받아 적용합니다. 재등록 시 `--tool-groups`가 추가될 수 있습니다. Unity CLI `1.0.1`부터 `--tools`와 `--exclude-tools`는 Editor 명령 그룹 전체에도 적용되므로 기존 허용·제외 목록을 확인하세요. 등록 후 Codex를 재시작하고 노출된 도구 목록과 읽기 전용 Unity MCP 호출을 검증합니다. [도구 규칙](../MD/UNITY_TOOLING.md#5-unity-mcp-등록-확인과-보완)
 
 ### Unity CLI 점검 및 호환성
 

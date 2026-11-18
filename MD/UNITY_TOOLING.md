@@ -135,6 +135,8 @@ unity mcp configure codex
 
 Unity CLI `1.0.0`부터 Editor MCP 등록에 `--tool-groups`가 추가된다. 기존 등록은 CLI 업데이트만으로 바뀌지 않는다. 재등록 전 `unity mcp configure codex --dry-run --format json`에서 예정 인수를 확인한다. 그룹 방식으로 바뀌면 Codex에 노출되는 도구 이름이 달라질 수 있으므로 기존 도구 허용 목록과 비교한다.
 
+Unity CLI `1.0.1`부터 MCP 서버 실행 인수인 `--tools`와 `--exclude-tools`는 `editor_playmode` 같은 Editor 명령 그룹 이름에도 적용된다. 그룹 이름을 지정하면 그 안의 모든 명령이 허용되거나 제외된다. 필터는 Codex MCP 서버의 `args`에 설정한다. `--exclude-tools`는 허용 목록보다 나중에 적용되며, `"*status*"`처럼 넓은 패턴은 연결 진단용 `unity-cli-status`도 숨길 수 있다. 기존 필터가 있다면 업데이트 후 실제 MCP 도구 목록에서 허용·제외 범위와 진단 도구를 확인한다.
+
 주의: 공식 configure 명령은 Codex의 네트워크 관련 설정도 조정할 수 있다. dry-run 및 적용 전후 차이를 검토하고, 불필요한 권한 확대나 승인 정책 변경은 하지 않는다. 환경 정책이 해당 변경을 금지하면 우회하지 말고 정확히 보고한다.
 
 등록 후 다시 `codex mcp list`로 확인하고 IDE의 MCP 재시작 기능을 사용한다. 실제 MCP 도구 목록을 불러오고, 제공되는 읽기 전용 조회 도구를 한 번 호출한다. 등록만 확인했으면 “등록 완료 / 연결 미확인”으로 구분한다. 꺼짐 또는 권한 철회 상태를 누락으로 취급해 자동 재활성화하지 않는다.
@@ -225,6 +227,9 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 - `unity command`의 명령 자체 종료 코드 전달 및 스트리밍 출력을 고려한다. 텍스트 로그와 구조화 JSON이 혼합되는지 실제 출력으로 확인하여, 확인되지 않은 필드를 추측하지 않는다.
 - `unity docs cache --format json`에서 목록은 `data.items`에 있다.
 - `unity pipeline install`·`unity pipeline upgrade`의 성공 결과를 TSV로 읽는 경우 헤더와 레이블이 붙은 key/value 행을 기준으로 파서를 검증한다.
+- 자동화에서는 명령마다 `--format json` 또는 `--format ndjson`을 명시하고 결과 형식에 맞게 읽는다. Unity CLI `1.0.1`부터 `unity version --format tsv`와 `unity upgrade --check --format tsv` 등은 `key`·`value` 헤더가 있는 표를 반환한다. 단일 버전 문자열이 필요하면 `unity --format human --version`을 사용한다.
+- Unity CLI `1.0.1`부터 `unity logs --format ndjson`의 마지막 `result`는 `data`에 페이지 정보 `total`, `nextPage`, `partial`을 반환한다. `unity commands --format json` 및 NDJSON의 각 명령에는 전체 명령 경로를 나타내는 `path`가 포함된다.
+- PowerShell 자동완성 원문은 `unity completion powershell`로 얻는다. Unity CLI `1.0.1`에서 `--format json`을 지정하면 생성된 스크립트는 `data.script`에 들어간다.
 - 이 문서는 **점검 규칙**이며, 특정 프로젝트에 있는 자동화 스크립트를 무단 수정하거나 전체 빌드·테스트를 자동 시작하지 않는다.
 
 ### 7.3. 자동화의 인증 및 테스트 결과 확인
@@ -267,7 +272,7 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 
 ## 10. 공식 근거와 유지보수
 
-- 2026-11-13에 공식 stable 배포 목록과 Linux CLI `1.0.0`을 대조했다. 버전·업데이트 조회, Codex 설정 미리보기, 관련 명령 도움말을 확인했다.
+- 2026-11-18에 공식 [Unity CLI 1.0.1 릴리스 노트](https://docs.unity.com/en-us/unity-cli/release-notes/2026/november#101)와 Linux CLI `1.0.1`을 대조했다. 버전·stable 갱신, Codex MCP 설정 미리보기와 자동화 출력을 확인했다.
 
 검토 기준 버전은 문서 작성 당시의 명령어 검증 이력이며, 실제 작업 시 사용할 CLI 버전을 고정하거나 자동 업데이트를 제한하지 않는다.
 
