@@ -25,10 +25,6 @@
 6. 최신 조회 실패는 “최신”이 아니라 “확인 불가”로 보고한다. 캐시만으로 온라인 최신 확인을 완료했다고 판단하지 않는다.
 7. Unity CLI 신규 설치와 기존 설치의 갱신은 공식 최신 stable 릴리스를 사용한다. 프리릴리스가 설치돼 있으면 4절에 따라 stable로 전환한다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 패키지 버전이 선택되면 결과에 표시한다.
 
-Unity CLI `1.1.0`부터 `unity pipeline install`과 `unity pipeline upgrade`는 **Pipeline 패키지와 공식 `unity-pipeline` Agent Skill을 함께 설치·업데이트**한다. 대상은 실행 중인 Agent와 기존 Unity Skill이 있는 클라이언트이며, 사용자가 직접 편집한 Skill 복사본은 보존한다. 패키지 변경 승인을 요청할 때 이 Skill 동반 변경과 대상 클라이언트 범위를 함께 고지한다. 공식 `SKILL.md`를 수정하지 않는 기본 운영에서는 **`--no-skill`을 붙이지 않는다**. 사용자가 별도 관리를 요청한 경우에만 `--no-skill` 사용을 검토한다.
-- `unity skill refresh`는 전역 `unity-cli` Skill만 있고 `unity-pipeline` Skill이 없었던 일부 클라이언트에 누락된 Skill을 설치할 수도 있다. 단독 refresh 실행은 여전히 별도 승인 대상이다.
-- **Unity 6000.5.0~6000.5.2에서는 Pipeline 패키지가 정상 시작하지 않으므로**, CLI 1.1.0은 `PIPELINE_EDITOR_UNSUPPORTED`(종료 코드 `6`)로 파일 변경 전에 중단한다. 호환 Editor `6000.5.3f1` 이상을 준비해야 하며, Editor 자동 업그레이드나 `--force` 우회는 하지 않는다.
-
 ## 3. 실행 환경과 설치 확인
 
 Windows PowerShell 예시다. **실제 Unity 프로젝트 루트에서 실행**한다. Unity 프로젝트가 VS Code Workspace나 Git 저장소의 하위 폴더에 있다면 먼저 그 프로젝트 루트로 이동한다. 현재 폴더를 확인하지 않고 다른 프로젝트에 명령을 실행하지 않는다.
@@ -151,6 +147,10 @@ Unity CLI `1.0.1`부터 MCP 서버 실행 인수인 `--tools`와 `--exclude-tool
 
 최초 전체 점검에서 Unity CLI는 4절에 따라 최신 stable로 준비하고, 현재 프로젝트의 `com.unity.pipeline`은 공식 레지스트리에서 CLI가 선택하는 최신 호환 버전을 사용한다. 설치되지 않았으면 설치하고, 구버전이면 지원되는 `upgrade` 절차를 실행한다. 패키지의 `manifest.json`에 일반 버전 번호가 적혀 있다는 이유만으로 이를 명시적인 업데이트 금지로 간주하지 않는다. 다만 사용자·팀의 명시적 버전 고정 또는 업데이트 금지, 다른 출처의 의존성, Unity Editor 비호환, 최신·호환성 확인 불가, 권한 제한이 있으면 기존 예외 규칙에 따라 보류하고 보고한다. **자동 최신화를 이유로 Unity Editor·다른 패키지까지 업그레이드하지 않는다.**
 
+Unity CLI `1.1.0`부터 `unity pipeline install`과 `unity pipeline upgrade`는 **Pipeline 패키지와 공식 `unity-pipeline` Agent Skill을 함께 설치·업데이트**한다. 대상은 실행 중인 Agent와 기존 Unity Skill이 있는 클라이언트이며, 사용자가 직접 편집한 Skill 복사본은 보존한다. 패키지 변경 승인을 요청할 때 이 Skill 동반 변경과 대상 클라이언트 범위를 함께 고지한다. 공식 `SKILL.md`를 수정하지 않는 기본 운영에서는 **`--no-skill`을 붙이지 않는다**. 사용자가 별도 관리를 요청한 경우에만 `--no-skill` 사용을 검토한다.
+- `unity skill refresh`는 전역 `unity-cli` Skill만 있고 `unity-pipeline` Skill이 없었던 일부 클라이언트에 누락된 Skill을 설치할 수도 있다. 단독 refresh 실행은 여전히 별도 승인 대상이다.
+- **Unity 6000.5.0~6000.5.2에서는 Pipeline 패키지가 정상 시작하지 않으므로**, CLI 1.1.0은 `PIPELINE_EDITOR_UNSUPPORTED`(종료 코드 `6`)로 파일 변경 전에 중단한다. 호환 Editor `6000.5.3f1` 이상을 준비해야 하며, Editor 자동 업그레이드나 `--force` 우회는 하지 않는다.
+
 ```powershell
 unity pipeline --help
 unity pipeline editors --format json
@@ -186,6 +186,7 @@ unity command --detail full --project-path "$UnityProjectRoot" --format json
 ```
 
 - CLI 1.1.0부터 Editor 대상 명령에는 가능한 한 **`--project-path`를 항상 명시**한다. CLI가 작업 폴더의 이전 대상 Editor를 기억하더라도 잘못된 프로젝트나 멀티플레이어 인스턴스를 선택하지 않도록 실제 경로를 사용한다.
+
 대상 프로젝트가 맞는지, Editor에 연결되는지, 사용 가능한 명령 목록이 반환되는지 확인한다. MCP에서도 같은 프로젝트에 대한 읽기 전용 조회를 확인한다.
 
 연결 실패 시 다음을 구분한다.
