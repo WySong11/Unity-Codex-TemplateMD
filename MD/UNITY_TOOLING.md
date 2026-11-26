@@ -25,6 +25,10 @@
 6. 최신 조회 실패는 “최신”이 아니라 “확인 불가”로 보고한다. 캐시만으로 온라인 최신 확인을 완료했다고 판단하지 않는다.
 7. Unity CLI 신규 설치와 기존 설치의 갱신은 공식 최신 stable 릴리스를 사용한다. 프리릴리스가 설치돼 있으면 4절에 따라 stable로 전환한다. Pipeline은 공식 레지스트리에서 CLI가 선택하는 최신을 사용한다. experimental 패키지 버전이 선택되면 결과에 표시한다.
 
+Unity CLI `1.1.0`부터 `unity pipeline install`과 `unity pipeline upgrade`는 **Pipeline 패키지와 공식 `unity-pipeline` Agent Skill을 함께 설치·업데이트**한다. 대상은 실행 중인 Agent와 기존 Unity Skill이 있는 클라이언트이며, 사용자가 직접 편집한 Skill 복사본은 보존한다. 패키지 변경 승인을 요청할 때 이 Skill 동반 변경과 대상 클라이언트 범위를 함께 고지한다. 공식 `SKILL.md`를 수정하지 않는 기본 운영에서는 **`--no-skill`을 붙이지 않는다**. 사용자가 별도 관리를 요청한 경우에만 `--no-skill` 사용을 검토한다.
+- `unity skill refresh`는 전역 `unity-cli` Skill만 있고 `unity-pipeline` Skill이 없었던 일부 클라이언트에 누락된 Skill을 설치할 수도 있다. 단독 refresh 실행은 여전히 별도 승인 대상이다.
+- **Unity 6000.5.0~6000.5.2에서는 Pipeline 패키지가 정상 시작하지 않으므로**, CLI 1.1.0은 `PIPELINE_EDITOR_UNSUPPORTED`(종료 코드 `6`)로 파일 변경 전에 중단한다. 호환 Editor `6000.5.3f1` 이상을 준비해야 하며, Editor 자동 업그레이드나 `--force` 우회는 하지 않는다.
+
 ## 3. 실행 환경과 설치 확인
 
 Windows PowerShell 예시다. **실제 Unity 프로젝트 루트에서 실행**한다. Unity 프로젝트가 VS Code Workspace나 Git 저장소의 하위 폴더에 있다면 먼저 그 프로젝트 루트로 이동한다. 현재 폴더를 확인하지 않고 다른 프로젝트에 명령을 실행하지 않는다.
@@ -92,7 +96,7 @@ unity skill install --list
 unity skill sync --help
 ```
 
-- `unity skill sync codex`는 해당 Codex용 Skill을 갱신하는 **설정 변경 명령**이다. 사용자 요청·승인이 있으면 기존 Plugin/Skill 중복 여부와 변경 대상을 검토한 뒤 실행하며, 자동 CLI·Pipeline 업데이트 정책을 Skill 자동 갱신으로 확대하지 않는다. 설치 버전에서 지원되지 않으면 추측하여 사용하지 않는다.
+- `unity skill sync codex`는 해당 Codex용 Skill을 동기화하는 **별도 설정 변경 명령**이다. 사용자 요청·승인이 있으면 기존 Plugin/Skill 중복 여부와 변경 대상을 검토한 뒤 실행한다. 단, CLI 1.1.0의 Pipeline 설치·업그레이드에 동반되는 `unity-pipeline` Skill 갱신은 6절의 예외로 구분한다.
 - 도움말에 명령이 없는 오래된 CLI는 공식 설치 안내를 확인하여 갱신하고, 변경된 명령 체계에 맞춰 이후 절차를 수행한다.
 
 ### 4.1. Plugin·Skill 미리보기와 결과 판정
@@ -108,7 +112,7 @@ unity skill refresh --dry-run --format json
 - `unity plugin install`·`unity plugin upgrade`는 **의존 Plugin 자동 설치**와 각 의존성의 라이선스 절차를 수반할 수 있다. JSON `warnings`에 표시되는 프리릴리스 경고, 설치 위치(전역·프로젝트 로컬), 필요한 의존 Plugin과 라이선스를 확인하고 해당 범위의 설치·갱신 승인을 받는다.
 - `unity plugin upgrade`가 갱신하는 Skill은 **이미 설치된 범위**에 한정될 수 있다. 전역 Skill만 갱신한 뒤 프로젝트 로컬 Skill도 갱신되었다고 판단하지 않는다.
 - `unity skill refresh --dry-run --format json`은 계획된 결과를 `would-update`·`would-skip`·`would-prune` 등으로 표시한다. 실제 `unity skill refresh --format json`의 `refreshed`·`up-to-date`·`pruned`·`skipped`·`conflict`와 구별하고 `skipReason` 등 실제 반환 필드를 확인한다. 명령 종료 코드가 `0`이어도 모든 Skill이 최신·정상 적용되었다고 결론내리지 않는다.
-- `unity skill sync codex`, `unity skill refresh`, `unity setup codex` 및 Plugin 설치·업그레이드는 사용자 요청·승인 후 실행한다. CLI와 `com.unity.pipeline`의 기존 자동 최신화 정책은 **그대로 유지**한다.
+- `unity skill sync codex`, 단독 `unity skill refresh`, `unity setup codex` 및 Plugin 설치·업그레이드는 사용자 요청·승인 후 실행한다. **Pipeline install/upgrade가 자동 수행하는 `unity-pipeline` Skill 변경은 사전에 고지한 Pipeline 설치·업데이트 승인에 포함**한다. CLI와 `com.unity.pipeline`의 기존 최신 stable·최신 호환 버전 정책은 유지한다.
 
 ## 5. Unity MCP 등록 확인과 보완
 
@@ -165,6 +169,7 @@ unity pipeline install --project-path "$UnityProjectRoot"
 unity pipeline upgrade --project-path "$UnityProjectRoot"
 ```
 
+- Pipeline 변경 후 프로젝트의 manifest/lockfile과 `unity skill install --list`를 확인하고 실제 Codex 세션에서 `unity-pipeline` Skill의 설치·인식을 검증한다. `unity skill show --skill unity-pipeline`은 설치 전 내용 조회이며, 조회 성공만으로 설치 완료를 뜻하지 않는다. 수정본·전역·프로젝트 Skill의 활성 경로와 충돌을 구별한다.
 - 최신이면 파일을 다시 쓰지 않는다. 매번 `install --force`로 덮어쓰지 않는다.
 - Git/로컬/embedded 의존성이면 일반 레지스트리 설치로 강제 교체하지 않는다. 출처와 교체가 필요한 이유를 먼저 보고한다.
 - 업데이트 후 Unity의 패키지 해결과 컴파일이 끝났는지 확인한다. manifest 수정 성공만으로 설치·연결 완료라고 판단하지 않는다.
@@ -180,6 +185,7 @@ unity pipeline editors --format json
 unity command --detail full --project-path "$UnityProjectRoot" --format json
 ```
 
+- CLI 1.1.0부터 Editor 대상 명령에는 가능한 한 **`--project-path`를 항상 명시**한다. CLI가 작업 폴더의 이전 대상 Editor를 기억하더라도 잘못된 프로젝트나 멀티플레이어 인스턴스를 선택하지 않도록 실제 경로를 사용한다.
 대상 프로젝트가 맞는지, Editor에 연결되는지, 사용 가능한 명령 목록이 반환되는지 확인한다. MCP에서도 같은 프로젝트에 대한 읽기 전용 조회를 확인한다.
 
 연결 실패 시 다음을 구분한다.
@@ -187,7 +193,7 @@ unity command --detail full --project-path "$UnityProjectRoot" --format json
 - 대상 Editor가 닫혀 있음
 - 패키지 해결 또는 컴파일 진행 중 (`UNAVAILABLE`, 종료 코드 `17` 가능)
 - 컴파일 오류 / Safe Mode (`UNAVAILABLE`, 종료 코드 `17` 가능)
-- Editor가 입력을 기다리는 모달 팝업 (`AWAITING_INPUT`, 종료 코드 `18` 가능)
+- Editor가 입력을 기다리는 모달 팝업 (`AWAITING_INPUT` 또는 `EDITOR_BLOCKED_BY_DIALOG`, 종료 코드 `18` 가능)
 - 다른 프로젝트 선택 또는 실행 환경 불일치
 - 로컬 통신 제한 / MCP 재시작 필요
 
@@ -199,17 +205,18 @@ unity command --detail full --project-path "$UnityProjectRoot" --format json
 |---|---|---|
 | `0` | 성공 | 실제 명령 결과도 확인하고 진행 |
 | `1` | 일반 오류·설정 쓰기 실패 가능 | `unity mcp configure` 실패 시 형식·오류 메시지 확인 |
-| `2` | 잘못된 인수·입력 검증 실패 가능 | 실패한 하위 명령의 `--help`에서 인수와 옵션 확인 |
+| `2` | `INVALID_COMMAND_ARGS` 등 | 잘못된 인수, MCP client/--local 설정 오류, PAC 프록시 인수·환경변수 확인 |
 | `4` | `VCS_TOKEN_REQUIRED` 등 명령별 오류 | `--git-token-from-stdin` 빈 입력인지 확인, 저장된 로그인으로 대체하지 않음 |
-| `6` | 일반 실행 실패 등 | 메시지와 원래 원인 확인, 17·18과 구별 |
+| `6` | `EDITOR_CONNECTION_LOST`, `PIPELINE_EDITOR_UNSUPPORTED` 등 | Editor 연결 손실 시 명령이 수행됐을 수도 있으므로 상태 확인. Pipeline 비호환 Editor 버전이면 설치 중단 |
 | `7` | `NETWORK_UNREACHABLE` | 오프라인·DNS·프록시·서비스 접근 확인 (온라인 조회/업데이트 명령 등) |
-| `11` | `PROJECTS_CLOSE_NOT_A_PROJECT` 등 | CLI 1.0.0의 `close`·`projects close`에서 프로젝트 경로 확인 |
-| `12` | Editor 미응답 (예: `EDITOR_NOT_RUNNING`) | `unity recompile`에서 발생하면 프로젝트 경로, Editor 실행 상태, Pipeline 연결 확인 |
-| `14` | `EDITOR_TIMEOUT` | `unity command`의 실행 시간 초과인지 확인 |
+| `11` | `NOT_FOUND`, `EDITOR_NOT_INSTALLED` 등 | 프로젝트·Editor·패키지·템플릿 등 경로와 리소스 존재 확인 |
+| `12` | `EDITOR_NOT_RUNNING` | 프로젝트·인스턴스·포트와 실행 중인 Editor 연결 확인 (`data.candidates` 제공 시 조회) |
+| `14` | `EDITOR_TIMEOUT` 등 | 일반 제한 시간 초과 확인. 1.1.0의 모달 대화상자 차단은 종료 `18`로 구분 |
 | `17` | `UNAVAILABLE` | Editor 로딩·컴파일·리로드·Safe Mode·과도한 동시 명령 종료 확인 |
-| `18` | `AWAITING_INPUT` | 모달 팝업 확인 후 필요한 버튼의 영향 검토 |
+| `18` | `AWAITING_INPUT`, `EDITOR_BLOCKED_BY_DIALOG`, `PROJECTS_CLOSE_BLOCKED_BY_DIALOG` | 실제 대화상자 확인·처리 후 재시도. 임의 `--force` 종료 금지 |
 
 - 종료 코드는 **실패한 명령, CLI 버전, 실제 오류 메시지**와 함께 해석한다.
+- 1.1.0에서 `unity command`가 Editor의 리로드 중 응답 전에 연결을 닫으면 `EDITOR_CONNECTION_LOST`(종료 코드 `6`)가 반환될 수 있다. 명령이 **이미 실행됐을 수 있으므로** 상태 확인 없이 반복 실행하지 않는다. 모달 대화상자에 가로막힌 시간 초과는 종료 코드 `14`가 아니라 `18`로 구분한다.
 - 지원 Unity Editor에서 `unity pipeline editors --format json`으로 로딩·Safe Mode·엔드포인트·모달 팝업 상태를 확인한다. Editor가 로딩 중인 것을 죽거나 연결 실패한 상태로 오인하지 않는다.
 - 모달 팝업이 있는 경우, **실제 명령 도움말을 확인한 다음** 다음과 같이 조회한다.
 
@@ -226,6 +233,7 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 - 지원 Editor에서 `unity command --format json`은 **명령 자체의 결과**를 반환할 수 있다. `--format ndjson`은 결과를 줄 단위로 출력하며, 이 명령의 TSV는 헤더 없이 레코드를 출력한다. 파서가 읽는 필드와 헤더는 실제 출력으로 확인한다.
 - `unity command`의 명령 자체 종료 코드 전달 및 스트리밍 출력을 고려한다. 텍스트 로그와 구조화 JSON이 혼합되는지 실제 출력으로 확인하여, 확인되지 않은 필드를 추측하지 않는다.
 - `unity docs cache --format json`에서 목록은 `data.items`에 있다.
+- CLI 1.1.0의 `unity docs toc --format json`·`ndjson`에는 문서 Markdown 변형 URL `markdownUrl`이 추가된다. 기존 `url`은 HTML URL이므로 구분한다.
 - `unity pipeline install`·`unity pipeline upgrade`의 성공 결과를 TSV로 읽는 경우 헤더와 레이블이 붙은 key/value 행을 기준으로 파서를 검증한다.
 - 자동화에서는 명령마다 `--format json` 또는 `--format ndjson`을 명시하고 결과 형식에 맞게 읽는다. Unity CLI `1.0.1`부터 `unity version --format tsv`와 `unity upgrade --check --format tsv` 등은 `key`·`value` 헤더가 있는 표를 반환한다. 단일 버전 문자열이 필요하면 `unity --format human --version`을 사용한다.
 - Unity CLI `1.0.1`부터 `unity logs --format ndjson`의 마지막 `result`는 `data`에 페이지 정보 `total`, `nextPage`, `partial`을 반환한다. `unity commands --format json` 및 NDJSON의 각 명령에는 전체 명령 경로를 나타내는 `path`가 포함된다.
@@ -254,7 +262,7 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 | 항목 | 확인 전 | 확인 후 | 판정 |
 | --- | --- | --- | --- |
 | Unity CLI | 실제 버전·채널 | 실제 버전·채널 | 최신 stable / 업데이트 / stable 전환 / 적용 대기 / 확인 불가 |
-| Codex Unity Skill | 실제 Plugin·Skill 설치 상태 | 설치·인식 확인 결과 | 최신 확인 / 갱신 필요 / 확인 불가 (설치·동기화는 별도 승인) |
+| Codex Unity Skill | 실제 Plugin·Skill 설치 상태 | 설치·인식 확인 결과 | Pipeline 승인에 포함된 동반 설치 / 별도 승인 갱신 / 확인 불가 |
 | Unity MCP 등록 | 없음 / 있음 / 비활성 | 실제 상태 | 정상 / 보완 / 차단 |
 | Unity MCP 호출 | 미확인 | 실제 조회 결과 | 연결 성공 / 실패 / 재시작 필요 |
 | Pipeline | 선언·해결 버전 | 선언·해결 버전 | 최신 / 설치 / 업데이트 / 호환 불가 |
@@ -272,7 +280,7 @@ unity command editor dialog --project-path "$UnityProjectRoot"
 
 ## 10. 공식 근거와 유지보수
 
-- 2026-11-18에 공식 [Unity CLI 1.0.1 릴리스 노트](https://docs.unity.com/en-us/unity-cli/release-notes/2026/november#101)와 Linux CLI `1.0.1`을 대조했다. 버전·stable 갱신, Codex MCP 설정 미리보기와 자동화 출력을 확인했다.
+- 2026-11-26에 사용자가 제공한 `unity changelog --target 1.1.0`의 내용을 기반으로 Pipeline·Skill 동반 관리, Editor 오류, 빌드 변경사항을 반영했다. 이 항목은 릴리스 노트 검토 결과이며 실제 Windows CLI·Editor 실행 검증은 아니다. 2026-11-18의 1.0.1 확인 이력은 이전 문서에 반영되어 있다.
 
 검토 기준 버전은 문서 작성 당시의 명령어 검증 이력이며, 실제 작업 시 사용할 CLI 버전을 고정하거나 자동 업데이트를 제한하지 않는다.
 

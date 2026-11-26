@@ -108,6 +108,7 @@
 - 열린 Editor를 사용할 경우 **활성 빌드 타깃이 변경될 수 있다.** 프로젝트의 저장되지 않은 씬·설정·사용자 변경을 보호하고, 대상 플랫폼 전환 및 재임포트 영향을 미리 검토한다.
 - Editor가 Play Mode, 스크립트 컴파일 중이거나 모달 팝업을 기다릴 때에는 열린 Editor 빌드가 거부될 수 있다. 연결 상태 및 `UNITY_TOOLING.md` 7.1절의 오류 분류를 먼저 확인한다.
 - `--execute-method`, `--profile`, `--args`, `--accelerator`/`--no-accelerator`, `--log-file`, `--editor-path`, 열린 Editor와 다른 `--editor-version`, `--architecture`, `--build-target-group`, `--android-*` 등 **별도 Editor 프로세스가 필요한 옵션**을 사용하는 경우에는 열린 Editor 방식으로 강행하지 않는다. 공식 CLI 도움말과 기존 CI 방법을 따른다.
+- CLI 1.1.0부터 **같은 프로젝트의 동시 `unity build` 실행이 거부**된다. 기존 빌드의 실제 종료를 확인한 후 새 빌드를 시작하고, 실패를 이유로 Editor를 강제 종료하거나 중복 실행하지 않는다.
 - `--timeout`이나 Ctrl+C는 **CLI가 빌드를 기다리는 동작만 중단**할 수 있다. 이미 열린 Editor에서 시작된 빌드는 계속 실행될 수 있으므로, 종료 코드나 대기 중단만으로 빌드의 성공·실패·취소를 단정하지 않는다.
 - 빌드 완료 판정은 Editor의 실제 완료 상태·Build Report·산출물을 기준으로 하며, 사용 중인 Editor를 임의 종료하지 않는다. 열린 Editor 빌드가 불가능하면 자동으로 Editor를 종료하지 않고 별도 빌드 경로의 허용 여부를 확인한다.
 
@@ -120,6 +121,13 @@ unity build --help
 # unity test "$UnityProjectRoot" --mode EditMode -o "./TestResults/EditMode.xml"
 ```
 
+
+### Unity CLI 1.1.0: Android 디버그 서명과 프로필 버전 관리
+
+- Android 테스트 빌드에서 `unity build --android-debug-key`를 사용할 수 있다. 이는 Unity 제공 디버그 키로 서명하는 기능이며 Android Profile 기반 빌드에도 지원한다. `--android-keystore-base64` 및 관련 옵션과 함께 사용할 수 없고, 스토어 배포용 서명으로 취급하지 않는다.
+- Android Profile 빌드에서 `--android-export-type`과 `--android-version-code`가 적용된다. 다른 플랫폼 Profile에는 해당 옵션을 사용하지 않으며, `--execute-method` 없는 일반 `--target Android` 경로에서 지원되지 않는 점도 확인한다.
+- `unity build --profile`의 Git 기반 버전 전략(`semantic`, `tag`)은 1.1.0부터 미커밋 작업 또는 Git 저장소가 아닌 경우 `BUILD_VERSIONING_DIRTY_WORKING_TREE` / `BUILD_VERSIONING_NOT_A_GIT_REPO` 오류로 중단된다. **빌드 통과를 위해 사용자의 변경을 임의로 커밋·삭제하지 않는다.** Profile 자체 Player Settings 오버라이드가 버전 전략과 충돌하는지도 확인한다.
+- Profile 빌드가 버전 및 일부 Android 설정을 임시 변경하고 복구할 수 있으므로 빌드 전후 Git 상태와 설정 복원을 검증한다.
 존재하지 않는 빌드 진입점이나 확인하지 않은 명령을 실행 가능한 프로젝트 명령처럼 제시하지 않는다. 구체적인 명령을 추가할 때는 설치된 Unity·CLI 버전의 공식 사용법을 확인한다.
 
 ---

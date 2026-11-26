@@ -35,14 +35,15 @@ function Write-Warn([string]$Message) {
 function Get-UnityExitHint([int]$Code) {
     switch ($Code) {
         1  { return 'General failure or configuration write failure; inspect the command output.' }
-        2  { return 'Invalid or missing CLI argument; check the actual subcommand --help.' }
+        2  { return 'Invalid arguments or unsupported client/local MCP configuration; check PAC proxy variables and --help.' }
         4  { return 'Command-specific input/auth failure (e.g. VCS_TOKEN_REQUIRED); inspect output.' }
+        6  { return 'Editor connection may have been lost after execution or Pipeline rejected the Editor; check error and state before retrying.' }
         7  { return 'Network/service unavailable; check connectivity, DNS and proxy.' }
         11 { return 'Requested resource or project path was not found; check the command output.' }
         12 { return 'No Unity Editor answered; check the project, Editor and Pipeline connection.' }
-        14 { return 'Operation timed out; check network/Editor state.' }
+        14 { return 'Operation timed out; a modal Editor dialog now typically uses exit 18. Check the actual error.' }
         17 { return 'Unity Editor unavailable; check loading, compilation and Safe Mode.' }
-        18 { return 'Unity Editor awaiting dialog input; inspect safely before responding.' }
+        18 { return 'Editor blocked by a modal dialog; review it safely before rerunning or closing.' }
         default { return 'Check the command-specific error message.' }
     }
 }
@@ -55,6 +56,16 @@ function Write-Fail([string]$Message) {
 function Confirm-Change([string]$Question) {
     $answer = Read-Host "$Question [y/N]"
     return ($answer -match '^(y|yes)$')
+}
+
+function Confirm-PipelineChange([string]$Operation) {
+    if ($script:UnityCliRelease -and $script:UnityCliRelease.Core -ge [version]'1.1.0') {
+        Write-Warn 'Unity CLI 1.1.0+ also installs/updates the official unity-pipeline agent skill.'
+        Write-Note 'Targets: the running AI agent and clients with existing Unity skills; edited copies are preserved.'
+        Write-Note 'No --no-skill option is used. This Pipeline approval includes applicable skill changes.'
+        return (Confirm-Change "Run unity pipeline $Operation for this project, including its agent skill changes?")
+    }
+    return (Confirm-Change "Run unity pipeline $Operation for this project?")
 }
 
 function Test-Exe([string]$Name) {
@@ -388,16 +399,21 @@ function Setup-CliAndPipeline {
         Write-Warn "Unity Editor 6.x+ was not verified (ProjectVersion=$version). Pipeline changes skipped."
         return
     }
+    if ($version -match '^6000\.5\.(?:0|1|2)(?:[a-z]|$)') {
+        Write-Warn "Unity Editor $version cannot run Pipeline. Use 6000.5.3f1+ in a separate Editor upgrade; no --force is used."
+        return
+    }
     $declared = Get-PipelineDependency
     if ($declared -eq 'INVALID_MANIFEST') { return }
+    $pipelineChanged = $false
     $embeddedPipeline = Join-Path $script:ProjectRoot 'Packages\com.unity.pipeline'
     if ($null -eq $declared -and (Test-Path -LiteralPath $embeddedPipeline)) {
         Write-Warn 'Found an embedded Pipeline package under Packages/com.unity.pipeline. No registry install is attempted.'
     } elseif ($null -eq $declared) {
         Write-Note 'No Pipeline package is declared in this Unity project.'
-        if (Confirm-Change 'Run unity pipeline install for this project?') {
+        if (Confirm-PipelineChange 'install') {
             $code = Invoke-Tool 'unity' @('pipeline', 'install', '--project-path', $script:ProjectRoot)
-            if ($code -ne 0) { Write-Fail 'Pipeline installation failed. Check Unity auth login, Editor and network.' }
+            if ($code -ne 0) { Write-Fail 'Pipeline installation failed. Check Unity auth login, Editor and network.' } else { $pipelineChanged = $true }
         }
     } elseif ($declared -match '^(file:|git\+|git@|ssh:|https?:|\.{1,2}[/\\]|[/\\])') {
         Write-Warn 'Pipeline dependency is not a normal registry version. Package source is preserved; no upgrade attempted.'
@@ -406,10 +422,16 @@ function Setup-CliAndPipeline {
         $code = Invoke-Tool 'unity' @('pipeline', 'list-versions', '--format', 'json')
         if ($code -ne 0) {
             Write-Warn 'Could not check official Pipeline versions. Upgrade skipped.'
-        } elseif (Confirm-Change 'Check/apply latest compatible Pipeline through official upgrade (may change manifest/lockfile)?') {
+        } elseif (Confirm-PipelineChange 'upgrade') {
             $code = Invoke-Tool 'unity' @('pipeline', 'upgrade', '--project-path', $script:ProjectRoot)
-            if ($code -ne 0) { Write-Fail 'Pipeline upgrade failed. Existing project files were not reset.' }
+            if ($code -ne 0) { Write-Fail 'Pipeline upgrade failed. Existing project files were not reset.' } else { $pipelineChanged = $true }
         }
+    }
+    if ($pipelineChanged -and $script:UnityCliRelease -and $script:UnityCliRelease.Core -ge [version]'1.1.0') {
+        Write-Note 'Reading the installed skill list after Pipeline change.'
+        $skillCode = Invoke-Tool 'unity' @('skill', 'install', '--list')
+        if ($skillCode -ne 0) { Write-Warn 'Skill installation could not be verified. Check the Codex client manually.' }
+        Write-Note 'Restart Codex and verify recognition of the unity-pipeline skill in the intended client.'
     }
     Write-Section 'Pipeline after-check'
     $newVersion = Get-PipelineDependency

@@ -39,11 +39,13 @@
 - VS Code의 Codex 환경에서는 Unity Technologies의 공식 [`unity-agent-plugin`](https://docs.unity.com/en-us/ai/unity-plugin/codex)을 우선 사용하는 **방법 A**를 유지한다.
 - Unity 기능 작업 시 실제 사용 중인 VS Code Codex 확장과 `codex` CLI의 Plugin 상태 **및 Skill 설치·인식 상태를 각각** 확인한다. 서로 다른 설정 또는 실행 환경일 수 있으므로 터미널 출력만으로 확장 활성화 상태를 단정하지 않는다. 기존 Plugin 또는 Skill이 이미 설치되었다는 사실만으로 최신 상태라 판단하지 않는다.
 - 설치가 필요하면 `unity --version`으로 CLI를 확인하고, `unity setup codex --dry-run`으로 Plugin 등록과 Skill 설치 예정 경로를 확인한다. **사용자 명시적 설치 요청 또는 승인 후에만** `unity setup codex`를 실행한다. 설치 후 새 Codex 세션에서 Plugin과 Skill 인식 여부를 별도로 검증한다.
-- `unity setup codex`는 Codex용 Plugin과 Skill을 구성한다. Unity MCP 등록, 현재 프로젝트의 `com.unity.pipeline` 설치 및 Editor 연결 검증은 `MD/UNITY_TOOLING.md`의 절차를 따른다.
+- `unity setup codex`는 Codex용 Plugin과 Skill을 구성한다. Unity MCP 등록과 Editor 연결 검증은 `MD/UNITY_TOOLING.md`를 따른다.
+- Unity CLI `1.1.0`부터 `unity pipeline install`·`upgrade`는 `com.unity.pipeline` 패키지뿐 아니라 실행 중인 Agent 및 기존 Unity Skill이 있는 클라이언트의 **공식 `unity-pipeline` Skill**도 설치·업데이트할 수 있다. 이것은 Plugin 전체 업그레이드나 사용자 프로젝트 규칙 수정과 다르다. Pipeline 변경을 승인받을 때 Skill 동반 변경 대상·범위를 같이 알리고 승인받으며, 기본적으로 `--no-skill`로 자동 분리하지 않는다.
+- 공식 Skill의 `SKILL.md`를 직접 편집하지 않았다면 Unity의 기본 동반 갱신을 이용한다. 사용자가 직접 편집한 Skill 복사본은 CLI가 보존하도록 설계되어 있으나 실제 활성화 경로와 갱신 결과를 확인한다. 사용자 정의 `AGENTS.md`·`MD/`는 공식 Skill과 별도로 유지하고 덮어쓰지 않는다.
 - `unity skill sync codex`는 해당 클라이언트의 Unity Skill을 동기화하며, 수정된 사용자 복사본을 보존한다. `unity skill sync --help`와 `unity skill install --list`로 지원 옵션과 설치 상태를 확인한 다음, **사용자가 Skill 갱신을 요청·승인한 경우에만** 동기화한다.
 
 - Plugin 설치·업그레이드 전 `unity plugin --help`와 설치 미리보기로 **의존 Plugin·라이선스·프리릴리스 경고·전역/프로젝트 적용 범위**를 확인한다. 승인 범위 밖의 의존 Plugin 설치나 라이선스 수락이 필요하면 별도 승인받는다.
-- Skill 갱신 상태는 `unity skill refresh --help`에서 `--dry-run` 지원을 확인한 뒤 `unity skill refresh --dry-run --format json`으로 미리 본다. `would-update`, `would-skip`, `would-prune`은 갱신 예정 결과다. 실제 Skill 갱신과 Plugin 업그레이드는 사용자 요청·승인 후 실행한다.
+- `unity skill refresh`는 CLI 1.1.0부터 일부 누락된 `unity-pipeline` Skill을 설치할 수 있다. 실제 Skill 갱신과 Plugin 업그레이드는 사용자 요청·승인 후 실행한다. 단, **Pipeline install/upgrade 시 동반되는 Skill 갱신은 사전에 고지하고 받은 Pipeline 변경 승인 범위에 포함**한다.
 - Plugin이 제공하는 Skill, 사용자 전역 Skill, 프로젝트 로컬 `.agents/skills/`에 같은 Skill이 있으면 활성화된 경로와 중복 여부를 확인한다. 개별 설치 방식은 사용자가 따로 선택한 경우 기존 설치 상태와 공식 CLI 도움말을 확인해 적용한다.
 - 필요한 Unity Skill이 실제 설치되어 있다면 그 `SKILL.md`와 필요한 참조 자료를 읽고 현재 Unity·CLI·패키지 버전에 맞게 적용한다. 여러 Skill이 관련되면 필요한 것만 선택한다. Skill은 도구 사용 절차를 보조하며 프로젝트 규칙, 사용자의 요청 또는 시스템·도구 권한을 대체하지 않는다.
 - Unity CLI `1.0.1`의 `new-unity-project` Skill에는 플레이 가능한 게임 루프를 만드는 단계가 포함된다. 사용자가 프로젝트 초기 설정이나 기본 씬까지만 요청하면 해당 범위에서 마친다. 게시·Git 처리는 사용자 요청과 `MD/GIT.md`를 따른다.

@@ -19,10 +19,10 @@
 | 메뉴 | 동작 | 프로젝트 파일 변경 여부 |
 |---|---|---|
 | `1 Check` | 설치 여부·버전·패키지 선언·Codex·MCP 읽기 전용 점검 | 없음 |
-| `2 Setup` | 최신 stable CLI 설치·업데이트, 프로젝트별 Pipeline 설치·업그레이드 | **Pipeline 변경은 사용자 승인 시** 가능 |
+| `2 Setup` | 최신 stable CLI 설치·업데이트, Pipeline과 동반 Agent Skill 설치·업그레이드 | **Pipeline 및 Skill 변경은 사용자 승인 시** 가능 |
 | `3 Codex` | `unity setup codex --dry-run` 확인 후 공식 Plugin·Skill 설정 | **사용자 승인 시** 가능 (사용자/에이전트 설정) |
 | `4 Mcp` | `unity mcp configure codex --dry-run` 확인 후 설정 | **사용자 승인 시** 가능 (Codex 설정) |
-| `5 All` | 최신 stable CLI 준비 후 2→3→4의 나머지 단계 실행 | **Pipeline·Codex·MCP 변경은 사용자 승인 시** 가능 |
+| `5 All` | 최신 stable CLI 준비 후 Pipeline·동반 Skill → Codex → MCP 단계 실행 | **Pipeline·Skill·Codex·MCP 변경은 단계별 사용자 승인 시** 가능 |
 
 명령줄에서 바로 실행하려면 PowerShell 또는 CMD에서:
 
@@ -44,6 +44,10 @@ Batch\UnityCodexSetup.bat -Action All -ProjectPath "D:\Dev\MyUnityProject"
 
 **Pipeline:** 실제 Unity 6 이상 프로젝트에서 `com.unity.pipeline`을 `Packages/manifest.json` 및 `packages-lock.json`으로 확인합니다. 미설치인 경우 `unity pipeline install --project-path <프로젝트>`를 실행하고, 이미 설치된 경우 버전 목록 조회 및 승인 후 `unity pipeline upgrade --project-path <프로젝트>`를 실행할 수 있습니다. 자동 최신화 정책을 위해 공식 CLI가 버전을 선택하게 하되, 비호환·버전 고정·비레지스트리 패키지 출처는 보존해야 합니다. `.meta`, 씬, 프리팹을 직접 편집하지 않습니다. **버전 조회 성공만으로 최신·호환성을 단정하지 않습니다.**
 
+**CLI 1.1.0의 Pipeline 동반 Skill 설치:** `unity pipeline install`·`upgrade`는 프로젝트의 `com.unity.pipeline` 패키지와 공식 `unity-pipeline` Agent Skill을 함께 설치·업데이트할 수 있습니다. 대상은 실행 중인 Agent 및 기존 Unity Skill이 설치된 클라이언트입니다. 사용자 정의 `AGENTS.md`·`MD/` 문서의 수정과는 별개입니다. 배치는 **Pipeline 및 동반 Skill 변경 범위를 함께 안내하고 승인**을 받으며 기본적으로 `--no-skill`을 붙이지 않습니다. 직접 편집한 Skill 사본은 CLI가 보존하도록 설계되어 있으나 실제 활성 경로와 인식 상태는 확인해야 합니다. 명시적인 별도 관리가 필요한 경우에만 수동 명령의 `--no-skill`을 검토합니다.
+
+**Editor 호환성:** `6000.5.0~6000.5.2`에서는 Pipeline 패키지가 실행되지 않으므로 배치는 해당 버전에서 설치·업그레이드를 건너뜁니다. `6000.5.3f1` 이상 Editor 준비는 별도 작업이며 `--force`로 우회하지 않습니다.
+
 **Codex:** `codex` 실행 파일 및 Plugin과 Unity Skill 표시 상태를 확인합니다. VS Code Codex 확장과 명령줄 `codex` CLI는 환경이 다를 수 있습니다. Plugin·Skill의 설치는 별도의 `Codex` 메뉴로 실행하며 `unity setup codex --dry-run`과 사용자 승인이 선행합니다. CLI를 찾을 수 없다고 VS Code 확장이 설치되지 않았다고 판단하지 않습니다. Codex CLI 자체를 자동 설치하지 않습니다.
 
 **Unity MCP:** Codex MCP 목록과 `unity mcp configure codex --dry-run`의 예정 설정을 확인한 뒤 별도 승인을 받아 적용합니다. 재등록 시 `--tool-groups`가 추가될 수 있습니다. Unity CLI `1.0.1`부터 `--tools`와 `--exclude-tools`는 Editor 명령 그룹 전체에도 적용되므로 기존 허용·제외 목록을 확인하세요. 등록 후 Codex를 재시작하고 노출된 도구 목록과 읽기 전용 Unity MCP 호출을 검증합니다. [도구 규칙](../MD/UNITY_TOOLING.md#5-unity-mcp-등록-확인과-보완)
@@ -52,12 +56,12 @@ Batch\UnityCodexSetup.bat -Action All -ProjectPath "D:\Dev\MyUnityProject"
 
 - `Check`는 `unity skill refresh --help`에서 `--dry-run`을 확인할 수 있을 때 `unity skill refresh --dry-run --format json`으로 갱신 예정 상태를 조회합니다. 결과에서 `would-update`, `would-skip`, `would-prune`과 충돌 여부를 확인합니다.
 - `Codex` 메뉴에서는 `unity setup codex --dry-run`으로 설치 대상과 적용 범위를 확인한 뒤 승인받습니다. 의존 Plugin과 라이선스 확인은 [도구 규칙](../MD/UNITY_TOOLING.md)의 Plugin·Skill 절차를 참고하세요.
-- Unity CLI 실패 시 **진단 힌트**를 표시합니다. `1.0.0`의 `recompile`은 Editor 미응답에 `12`를 반환하고, `close`는 잘못된 프로젝트 경로에 `11`을 반환합니다. 명령별 의미와 오류 메시지를 함께 확인하세요.
+- Unity CLI 실패 시 **진단 힌트**를 표시합니다. 1.1.0의 `EDITOR_CONNECTION_LOST`(종료 `6`)는 명령이 이미 실행됐을 수도 있어 상태 확인 후 재시도해야 합니다. 모달 창 차단은 종료 `18`, 없는 Editor·리소스는 종료 `11`로 구분합니다.
 
 ## 4. 안전 정책 및 제한
 
 - `Check`는 설치·업데이트·파일 쓰기·Git 작업을 수행하지 않습니다. 단, Unity Editor 상태 조회나 명령 출력에는 로그인·네트워크·Editor 실행 상태가 영향을 줄 수 있습니다.
-- 기존 CLI의 stable 전환·갱신은 `Setup` 또는 `All` 선택에 포함됩니다. 신규 CLI 설치, Pipeline 패키지 변경, Codex Plugin·Skill 설정 및 MCP 등록은 각 확인 질문에서 `y` 또는 `yes`로 승인합니다.
+- 기존 CLI의 stable 전환·갱신은 `Setup` 또는 `All` 선택에 포함됩니다. 신규 설치, Pipeline 패키지 및 1.1.0 동반 Skill 변경, Codex Plugin·Skill 별도 설정, MCP 등록은 해당 실행 단계에서 `y` 또는 `yes`로 승인합니다.
 - Unity CLI 설치용 온라인 스크립트는 공식 HTTPS URL에서 다운로드하나, 다운로드 파일을 신뢰할 수 있는지 보안 정책에 따라 직접 검토해야 합니다. 이 도구는 게시자 디지털 서명을 독립적으로 검증하지 않습니다.
 - Unity CLI가 실행 가능해도 Unity Editor 연결이 보장되지는 않습니다. Editor가 실행 중이고 Pipeline 로딩·컴파일이 끝나야 연결을 확인할 수 있습니다.
 - `unity auth login`은 사용자가 필요할 때 직접 실행합니다. 비밀번호·토큰을 이 스크립트에 입력하거나 파일에 저장하지 않습니다.
